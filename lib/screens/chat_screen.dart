@@ -15,7 +15,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   Widget _buildMessage(EEMessage message, bool isMe) {
     final messageBody = Container(
       width: MediaQuery.of(context).size.width * 0.65,
@@ -53,14 +52,14 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            message.time,
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
+           Text(
+              message.time,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
             ),
-          ),
           SizedBox(
             height: 10.0,
           ),
@@ -72,6 +71,17 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             textAlign: TextAlign.start,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: SizedBox() , ) , 
+              isMe
+              ? Icon(message.seen && message.sent
+                  ? Icons.mark_chat_read
+                  : Icons.check)
+              : SizedBox()
+            ],
+          )
         ],
       ),
     );
@@ -86,9 +96,7 @@ class _ChatScreenState extends State<ChatScreen> {
             iconSize: 30.0,
             icon: Icon(
               false ? Icons.favorite : Icons.favorite_border,
-              color: false
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey,
+              color: false ? Theme.of(context).primaryColor : Colors.grey,
             ),
             onPressed: () {
               // setState(() {
@@ -141,7 +149,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     if (widget.user == null) {
-      widget.user = (ModalRoute.of(context).settings.arguments as Map<String  , Object>)['user'] as Alie;
+      widget.user = (ModalRoute.of(context).settings.arguments
+          as Map<String, Object>)['user'] as Alie;
     }
     messageso = messages;
     return Scaffold(
