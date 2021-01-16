@@ -33,8 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
               bottom: 8.0,
               right: 80.0,
             ),
-      // color: isMe ? Colors.white : Color(0XFFfeeeee)  ,
-
+      // color: isMe ? Colors.white : Color(0XFFfeeeee),
       decoration: BoxDecoration(
         color: isMe ? Theme.of(context).accentColor : Color(0XFFfeeeee),
         borderRadius: isMe

@@ -20,7 +20,9 @@ class UpdateData {
   static String filePath;
 
   static StreamController<bool> onSyncController = StreamController();
+  static StreamController<bool> onSyncSearchController = StreamController();
   Stream<bool> get onSync => onSyncController.stream;
+  Stream<bool> get onSyncSearch => onSyncSearchController.stream;
 
   static Future<UpdateData> getInstance() async {
     if (onSyncController == null) {
@@ -131,6 +133,21 @@ class UpdateData {
       );
       print("image Downloadedd .... ");
     }
+  }
+
+  Future<void> searchUsers(String username) async {
+    onSyncSearchController.add(true);
+    final result = await _httpHandler.searchUsers(username);
+    if (result == null) {
+      print("Error Searching Users by username $username");
+      return;
+    }
+    searchResultUsers = result;
+    for (var usr in searchResultUsers) {
+      bool result = await usr.populateChats(_httpHandler);
+      await downloadImage(usr);
+    }
+    onSyncSearchController.add(false);
   }
   /*var documentDirectory = await getApplicationDocumentsDirectory();
           var firstPath = "${documentDirectory.path}/images/";

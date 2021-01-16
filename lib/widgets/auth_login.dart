@@ -166,7 +166,7 @@ class _AuthLoginState extends State<AuthLogin> {
                                   });
 
                                   Navigator.of(context).pushNamedAndRemoveUntil(
-                                      HomeScreen.Route, (route) => true);
+                                      HomeScreen.Route, (route) => false);
                                 } else {
                                   setState(() {
                                     message = loginres.message;
