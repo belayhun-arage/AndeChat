@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:ChatUI/data_store/active_data_store.dart';
 import 'package:ChatUI/data_store/shared_pref.dart';
-import 'package:ChatUI/models/message_model.dart';
+import 'package:ChatUI/models/ee_message_model.dart';
 import 'package:ChatUI/models/user_model.dart';
 import 'package:ChatUI/service/http_service.dart';
 import 'package:path_provider/path_provider.dart';

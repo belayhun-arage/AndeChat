@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ChatUI/models/message_model.dart';
+import 'package:ChatUI/models/ee_message_model.dart';
 import 'package:ChatUI/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 

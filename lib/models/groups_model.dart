@@ -1,4 +1,5 @@
-import 'package:ChatUI/models/messages.dart';
+/* This file contains class named Group and it's methods */
+import 'package:ChatUI/models/group_messages.dart';
 
 class Group {
   final String groupname;

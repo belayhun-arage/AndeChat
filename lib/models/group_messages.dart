@@ -38,3 +38,4 @@ class GroupMessage {
     return gmessage;
   }
 }
+

@@ -1,5 +1,8 @@
-import 'package:ChatUI/service/http_service.dart';
+/*This File containes a User Model named Alie 
+****** and it's methods + static functions.
 
+ */
+import 'package:ChatUI/service/http_service.dart';
 class Alie {
   final String id;
   final String imageUrl;
@@ -8,6 +11,8 @@ class Alie {
   final String lastUpdatedTime;
   final String lastSeen;
   final String username;
+  bool online=false ;
+  bool typing=false;
   List<String> myalies;
   List<String> mygroups;
   List<EEMessage> messages;

@@ -1,3 +1,4 @@
+/*End to end message data structure and its methods  */
 import 'package:ChatUI/models/user_model.dart';
 
 class Message {

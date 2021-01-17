@@ -1,5 +1,5 @@
 import 'package:ChatUI/data_store/active_data_store.dart';
-import 'package:ChatUI/models/message_model.dart';
+import 'package:ChatUI/models/ee_message_model.dart';
 import 'package:ChatUI/models/user_model.dart';
 import 'package:flutter/material.dart';
 
