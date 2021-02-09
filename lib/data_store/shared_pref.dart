@@ -12,6 +12,16 @@ class SharedPrefHandler {
   static const COOKIE = "Cookie";
   static const FILE_PATH = 'file_path';
 
+
+
+  static StreamController<bool> onSyncController = StreamController();
+  static StreamController<bool> onSyncSearchController = StreamController();
+  Stream<bool> get onSync => onSyncController.stream;
+  Stream<bool> get onSyncSearch => onSyncSearchController.stream;
+
+
+
+
   final SharedPreferences _preferences;
 
   static SharedPrefHandler _handler;

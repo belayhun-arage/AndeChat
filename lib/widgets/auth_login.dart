@@ -1,3 +1,4 @@
+import 'package:ChatUI/data_store/shared_pref.dart';
 import 'package:ChatUI/screens/home_screen.dart';
 import 'package:ChatUI/service/http_service.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,14 @@ class _AuthLoginState extends State<AuthLogin> {
   TextEditingController emailController;
   TextEditingController passwordController;
   HttpCallHandler httpHandler;
+  SharedPrefHandler handler;
   bool warningMessage = false;
   String message = "";
   @override
   void initState() {
+    SharedPrefHandler.getInstance().then((instance){
+      this.handler = instance ; 
+    });
     HttpCallHandler.getInstance().then((value) {
       httpHandler = value;
     });
@@ -91,7 +96,6 @@ class _AuthLoginState extends State<AuthLogin> {
                                 width: 1.0,
                               )),
                         ),
-
                         TextField(
                           autocorrect: true,
                           autofocus: true,

@@ -78,7 +78,7 @@ class _MyNavigationState extends State<MyNavigation> {
                             }()
                           : Image.asset(widget.user.imageUrl == ""
                               ? "assets/images/greg.jpg"
-                              : this.user.imageUrl),
+                              : widget.user.imageUrl),
                     ),
                     Text(
                       this.user.username,
