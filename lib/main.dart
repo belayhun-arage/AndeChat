@@ -20,16 +20,16 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
 
-      initialRoute: AuthScreen.Route,
+      initialRoute: HomeScreen.Route,
       // home: HomeScreen(),
       routes: {
         HomeScreen.Route: (context) {
           return HomeScreen();
         },
-        ChatScreen.Route : (context) {
+        ChatScreen.Route: (context) {
           return ChatScreen();
         },
-        AuthScreen.Route : (context){
+        AuthScreen.Route: (context) {
           return AuthScreen();
         },
       },

@@ -103,36 +103,38 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
         ],
       ),
-      body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-              backgroundColor: Theme.of(context).primaryColor,
-            ))
-          : Column(
-              children: [
-                CategorySelector(setTabName: setTabName),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    // padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        // FavouriteContact(),
-                        RecentChats(
-                          filesPath: filesPath,
-                        ),
-                      ],
-                    ),
-                  ),
+      body:
+          //isLoading
+          //     ? Center(
+          //         child: CircularProgressIndicator(
+          //         backgroundColor: Theme.of(context).primaryColor,
+          //       ))
+          //     :
+          Column(
+        children: [
+          CategorySelector(setTabName: setTabName),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).accentColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-              ],
+              ),
+              // padding: EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  // FavouriteContact(),
+                  RecentChats(
+                    filesPath: filesPath,
+                  ),
+                ],
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 }

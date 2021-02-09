@@ -1,5 +1,8 @@
+import 'package:ChatUI/models/posts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+import 'postwidget.dart';
 
 class CategorySelector extends StatefulWidget {
   final Function setTabName;
@@ -13,12 +16,14 @@ class _CategorySelectorState extends State<CategorySelector> {
   int selecteIndex = 0;
 
   final Map<String, IconData> categories = {
+    "Home": Icons.home,
     "Messages": Icons.message,
     "Online ": Icons.online_prediction,
     "Groups": Icons.group,
     "Requests": Icons.request_page
   };
   final List<String> categoryNames = [
+    "Home",
     "Messages",
     "Online ",
     "Groups",
@@ -39,6 +44,17 @@ class _CategorySelectorState extends State<CategorySelector> {
               setState(() {
                 this.selecteIndex = index;
                 widget.setTabName(categoryNames[this.selecteIndex]);
+                print(selecteIndex);
+                if (selecteIndex == 0) {
+                  PostWidget();
+                  print("this is home");
+                  Column(
+                    children: <Widget>[
+                      Text("hoooo"),
+                      for (final post in posts) PostWidget(post: post),
+                    ],
+                  );
+                }
               });
             },
             child: Padding(

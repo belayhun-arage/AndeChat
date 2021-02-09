@@ -18,7 +18,7 @@ class HttpCallHandler extends Service {
 
   static SessionHandler _sessHandler;
 
-  static const String host = "http://10.0.3.2:8080/";
+  static const String host = "http://10.6.152.98:8080/";
 
   static Future<HttpCallHandler> getInstance() async {
     if (_sessHandler == null) {
