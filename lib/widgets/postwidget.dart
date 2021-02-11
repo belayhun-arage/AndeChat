@@ -2,6 +2,7 @@ import 'package:ChatUI/models/posts.dart';
 import 'package:flutter/material.dart';
 
 import '../styleguide.dart';
+import 'ideadescription.dart';
 
 class PostWidget extends StatelessWidget {
   final Post post;
@@ -66,20 +67,23 @@ class PostWidget extends StatelessWidget {
                         SizedBox(
                           height: 10,
                         ),
-                        FittedBox(
-                          child: Row(
-                            children: <Widget>[
-                              Icon(Icons.location_on),
-                              SizedBox(
-                                width: 5,
+                        // FittedBox(
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.location_on),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Flexible(
+                              child: IdeaDescriptionText(
+                                text: post.description,
+
+                                //style: eventLocationTextStyle,
                               ),
-                              Text(
-                                post.description + "see more"  ,
-                                style: eventLocationTextStyle,
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+                        // ),
                         SizedBox(
                           height: 20.0,
                         ),

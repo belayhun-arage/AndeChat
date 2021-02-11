@@ -12,7 +12,8 @@ class Post {
 final post1 = Post(
     imagePath: "assets/images/john.jpg",
     title: "endet nachihu",
-    description: "selam tinish dess bilogn new yemetawut...",
+    description:
+        "selam tinish dess bilogn new yemetawu ena laworachihu  yefelekur mindin new silezi enjoy right na",
     profileimage: "assets/images/olivia.jpg",
     username: "Mekdes genetu");
 

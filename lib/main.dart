@@ -11,10 +11,10 @@ import 'package:ChatUI/stateClasses/state_observer.dart';
 
 void main() {
   Bloc.observer = ValuesObserver();
-  SharedPrefHandler handler;
-  SharedPrefHandler.getInstance().then((instance) {
-    handler = instance;
-  });
+  // SharedPrefHandler handler;
+  // SharedPrefHandler.getInstance().then((instance) {
+  //   handler = instance;
+  // });
   // Alie user = await handler.getUser();
   runApp(MyApp(null));
 }
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
 
-        initialRoute: HomeScreen.Route,
+        initialRoute: AuthScreen.Route,
         // home: HomeScreen(),
         routes: {
           HomeScreen.Route: (context) {
