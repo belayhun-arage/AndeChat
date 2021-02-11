@@ -1,5 +1,5 @@
 import 'package:ChatUI/data_store/active_data_store.dart';
-import 'package:ChatUI/models/message_model.dart';
+import 'package:ChatUI/models/ee_message_model.dart';
 import 'package:ChatUI/models/user_model.dart';
 import 'package:flutter/material.dart';
 
@@ -33,8 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
               bottom: 8.0,
               right: 80.0,
             ),
-      // color: isMe ? Colors.white : Color(0XFFfeeeee)  ,
-
+      // color: isMe ? Colors.white : Color(0XFFfeeeee),
       decoration: BoxDecoration(
         color: isMe ? Theme.of(context).accentColor : Color(0XFFfeeeee),
         borderRadius: isMe

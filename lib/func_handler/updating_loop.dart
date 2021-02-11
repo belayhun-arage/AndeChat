@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:ChatUI/data_store/active_data_store.dart';
 import 'package:ChatUI/data_store/shared_pref.dart';
-import 'package:ChatUI/models/message_model.dart';
+import 'package:ChatUI/models/ee_message_model.dart';
 import 'package:ChatUI/models/user_model.dart';
 import 'package:ChatUI/service/http_service.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,7 +20,9 @@ class UpdateData {
   static String filePath;
 
   static StreamController<bool> onSyncController = StreamController();
+  static StreamController<bool> onSyncSearchController = StreamController();
   Stream<bool> get onSync => onSyncController.stream;
+  Stream<bool> get onSyncSearch => onSyncSearchController.stream;
 
   static Future<UpdateData> getInstance() async {
     if (onSyncController == null) {
@@ -131,6 +133,21 @@ class UpdateData {
       );
       print("image Downloadedd .... ");
     }
+  }
+
+  Future<void> searchUsers(String username) async {
+    onSyncSearchController.add(true);
+    final result = await _httpHandler.searchUsers(username);
+    if (result == null) {
+      print("Error Searching Users by username $username");
+      return;
+    }
+    searchResultUsers = result;
+    for (var usr in searchResultUsers) {
+      bool result = await usr.populateChats(_httpHandler);
+      await downloadImage(usr);
+    }
+    onSyncSearchController.add(false);
   }
   /*var documentDirectory = await getApplicationDocumentsDirectory();
           var firstPath = "${documentDirectory.path}/images/";

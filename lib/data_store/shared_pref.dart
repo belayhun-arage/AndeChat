@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ChatUI/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,31 +14,35 @@ class SharedPrefHandler {
   static const COOKIE = "Cookie";
   static const FILE_PATH = 'file_path';
 
+  // ignore: close_sinks
+  static StreamController<bool> onSyncController = StreamController();
+  // ignore: close_sinks
+  static StreamController<bool> onSyncSearchController = StreamController();
+  Stream<bool> get onSync => onSyncController.stream;
+  Stream<bool> get onSyncSearch => onSyncSearchController.stream;
+
   final SharedPreferences _preferences;
 
   static SharedPrefHandler _handler;
 
   SharedPrefHandler(this._preferences);
 
-  Future<String >  getFilePath( ) async {
-     if (_handler == null) {
+  Future<String> getFilePath() async {
+    if (_handler == null) {
       await SharedPrefHandler.getInstance();
     }
-     String filePath =
+    String filePath =
         _handler._preferences.getString(SharedPrefHandler.FILE_PATH);
     return filePath;
   }
 
-
-  Future<void> setFilePath(String filePath ) async {
+  Future<void> setFilePath(String filePath) async {
     if (_handler == null) {
       await SharedPrefHandler.getInstance();
     }
-    _handler._preferences.setString(SharedPrefHandler.FILE_PATH, filePath );
+    _handler._preferences.setString(SharedPrefHandler.FILE_PATH, filePath);
     return;
   }
-
-
 
   static Future<SharedPrefHandler> getInstance() async {
     if (_handler == null) {

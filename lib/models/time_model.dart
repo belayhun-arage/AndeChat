@@ -1,3 +1,5 @@
+/*This time class is created to crate a time object from a string 
+which was encoded from golang time.Time Object  */
 class Time {
   final int hour;
   final int minute;

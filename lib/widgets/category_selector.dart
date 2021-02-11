@@ -44,17 +44,17 @@ class _CategorySelectorState extends State<CategorySelector> {
               setState(() {
                 this.selecteIndex = index;
                 widget.setTabName(categoryNames[this.selecteIndex]);
-                print(selecteIndex);
-                if (selecteIndex == 0) {
-                  PostWidget();
-                  print("this is home");
-                  Column(
-                    children: <Widget>[
-                      Text("hoooo"),
-                      for (final post in posts) PostWidget(post: post),
-                    ],
-                  );
-                }
+                // print(selecteIndex);
+                // if (selecteIndex == 0) {
+                //   PostWidget();
+                //   print("this is home");
+                //     Column(
+                //       children: <Widget>[
+                //         Text("hoooo"),
+                //         for (final post in posts) PostWidget(post: post),
+                //       ],
+                //     );
+                //   }
               });
             },
             child: Padding(

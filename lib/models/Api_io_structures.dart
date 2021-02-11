@@ -1,3 +1,5 @@
+/*This dart file contains classes to map the non  
+web socket  api end points message resposes data structure  */
 import 'dart:convert';
 
 class RegistrationInput {

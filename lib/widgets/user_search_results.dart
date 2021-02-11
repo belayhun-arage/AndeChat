@@ -1,12 +1,17 @@
 import 'dart:io';
 
-import 'package:ChatUI/models/ee_message_model.dart';
+import 'package:ChatUI/data_store/active_data_store.dart';
+// import 'package:ChatUI/models/message_model.dart';
+// import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ChatUI/screens/chat_screen.dart';
+import 'package:ChatUI/service/http_service.dart';
 import 'package:flutter/material.dart';
 
-class RecentGroupChats extends StatelessWidget {
+class SearchResult extends StatelessWidget {
   final String filesPath;
-  const RecentGroupChats({Key key, this.filesPath}) : super(key: key);
+  SearchResult({Key key, this.filesPath}) : super(key: key);
+
+  HttpCallHandler _httpHandler;
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +30,13 @@ class RecentGroupChats extends StatelessWidget {
             topRight: Radius.circular(20),
           ),
           child: ListView.builder(
-            itemCount: chats.length,
+            itemCount: searchResultUsers.length,
             itemBuilder: (context, index) {
-              final chat = chats[index];
+              final alie = searchResultUsers[index];
               return GestureDetector(
                 onTap: () =>
                     Navigator.pushNamed(context, ChatScreen.Route, arguments: {
-                  'user': chat.sender,
+                  'user': alie,
                 }),
                 child: Container(
                   margin: EdgeInsets.only(
@@ -39,7 +44,9 @@ class RecentGroupChats extends StatelessWidget {
                     right: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: chat.unread ? Color(0XFFffeeee) : Colors.white,
+                    color: alie.unreadMessages > 0
+                        ? Color(0XFFffeeee)
+                        : Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
                       topRight: Radius.circular(20.0),
@@ -51,22 +58,26 @@ class RecentGroupChats extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                              radius: 35.0,
-                              child: chat.sender.imageUrl == ""
-                                  ? Image.asset(chat.sender.imageUrl == ""
+                          SizedBox(
+                            height: 80,
+                            width: 80,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(80),
+                              child: alie.imageUrl == ""
+                                  ? Image.asset(alie.imageUrl == ""
                                       ? "assets/images/greg.jpg"
-                                      : chat.sender.imageUrl)
+                                      : alie.imageUrl)
                                   : Image.file(
                                       File(
-                                          '$filesPath${(chat.sender.imageUrl.split('/')[(chat.sender.imageUrl.split('/').length - 1)])}'),
+                                          '$filesPath${(alie.imageUrl.split('/')[(alie.imageUrl.split('/').length - 1)])}'),
                                       height: 150,
                                       width: 180,
-                                    )
+                                    ),
                               // AssetImage(
                               //   chat.sender.imageUrl,
                               // ),
-                              ),
+                            ),
+                          ),
                           SizedBox(
                             width: 10.0,
                           ),
@@ -74,7 +85,7 @@ class RecentGroupChats extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                chat.sender.username,
+                                alie.username,
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 15.0,
@@ -87,7 +98,12 @@ class RecentGroupChats extends StatelessWidget {
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.55,
                                 child: Text(
-                                  chat.text,
+                                  alie.messages != null &&
+                                          alie.messages.length > 0
+                                      ? (alie.messages[
+                                             0])
+                                          .text
+                                      : "Say Hi! to ${alie.username} ",
                                   style: TextStyle(
                                     color: Colors.blueGrey,
                                     fontSize: 15.0,
@@ -103,17 +119,19 @@ class RecentGroupChats extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            chat.time,
+                            "${alie.lastSeen}",
+                            overflow: TextOverflow.clip,
+                            softWrap: false,
                             style: TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
+                              fontSize: 5.0,
                             ),
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          chat.unread
+                          alie.unreadMessages > 0
                               ? Container(
                                   width: 40,
                                   height: 20,
