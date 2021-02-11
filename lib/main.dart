@@ -2,6 +2,7 @@ import 'package:ChatUI/data_store/shared_pref.dart';
 import 'package:ChatUI/screens/auth_screen.dart';
 import 'package:ChatUI/screens/chat_screen.dart';
 import 'package:ChatUI/models/user_model.dart';
+import 'package:ChatUI/screens/create_idea.dart';
 import 'package:ChatUI/screens/home_screen.dart';
 import 'package:ChatUI/stateClasses/user_cubit.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
 
-        initialRoute: AuthScreen.Route,
+        initialRoute: CreateIdea.Route,
         // home: HomeScreen(),
         routes: {
           HomeScreen.Route: (context) {
@@ -52,6 +53,9 @@ class MyApp extends StatelessWidget {
           AuthScreen.Route: (context) {
             return AuthScreen();
           },
+          CreateIdea.Route: (context) {
+            return CreateIdea();
+          }
         },
         // home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
