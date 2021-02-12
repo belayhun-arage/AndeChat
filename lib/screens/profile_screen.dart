@@ -14,7 +14,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
        child: Column(
          children : [
            Container(
-             child : Image.asset("assets/image/greg.jpeg") , 
+             child : Image.asset("assets/image/greg.jpeg") ,
            ) , 
            Text("This is username "),
            Text("This is samuaeladenw@gmail.com"),

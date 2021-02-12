@@ -132,7 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           radius: 70,
                           child: ClipOval(
                             child: Image.asset(
-                              'images/img.jpg',
+                              'assets/image/greg.jpeg',
+                             // 'images/img.jpg',
                               height: 150,
                               width: 150,
                               fit: BoxFit.cover,
