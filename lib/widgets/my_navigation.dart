@@ -63,7 +63,8 @@ class _MyNavigationState extends State<MyNavigation> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
-                      child: widget.user.imageUrl.split('/').length > 0
+                      child: 
+                      widget.user.imageUrl==""
                           ? () {
                               print(
                                   "The File To Be shown is : ${this.profileDir} ");
@@ -74,7 +75,7 @@ class _MyNavigationState extends State<MyNavigation> {
                                   height: 150,
                                   width: 180,
                                 ),
-                              );
+                                );
                             }()
                           : Image.asset(widget.user.imageUrl == ""
                               ? "assets/images/greg.jpg"

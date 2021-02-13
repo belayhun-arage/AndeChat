@@ -1,6 +1,5 @@
 /*This File containes a User Model named Alie 
 ****** and it's methods + static functions.
-
  */
 import 'package:ChatUI/service/http_service.dart';
 class Alie {
@@ -11,6 +10,7 @@ class Alie {
   final String lastUpdatedTime;
   final String lastSeen;
   final String username;
+  int idesCount ;
   bool online=false ;
   bool typing=false;
   List<String> myalies;

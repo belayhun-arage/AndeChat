@@ -17,22 +17,22 @@ class TabIndex extends Bloc<TabChangeEvent, int> {
     switch (event) {
       case TabChangeEvent.home:
         {
-          yield 1;
+          yield 0;
           break;
         }
       case TabChangeEvent.messages:
         {
-          yield 2;
+          yield 1;
           break;
         }
       case TabChangeEvent.online:
         {
-          yield 3;
+          yield 2;
           break;
         }
       case TabChangeEvent.groups:
         {
-          yield 4;
+          yield 3;
           break;
         }
     }
