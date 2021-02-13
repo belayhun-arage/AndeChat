@@ -1,14 +1,14 @@
 import 'package:ChatUI/data_store/active_data_store.dart';
 import 'package:ChatUI/data_store/shared_pref.dart';
 import 'package:ChatUI/func_handler/updating_loop.dart';
-import 'package:ChatUI/models/ee_message_model.dart';
+
 import 'package:ChatUI/models/user_model.dart';
 import 'package:ChatUI/stateClasses/tab_index_state.dart';
 import 'package:ChatUI/widgets/category_selector.dart';
-import 'package:ChatUI/widgets/faourite_contacts.dart';
+import 'package:ChatUI/widgets/chats_list.dart';
+
 import 'package:ChatUI/widgets/my_navigation.dart';
-import 'package:ChatUI/widgets/recent_chats.dart';
-import 'package:ChatUI/widgets/user_search_results.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,30 +38,36 @@ class _HomeScreenState extends State<HomeScreen> {
   bool searchInProgress = false;
   bool isSearchResultLoading = false;
   UpdateData _updateData;
+  PageController pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
     searchEntryIsVisible = false;
     searching = false;
     searchController = new TextEditingController();
+
     getApplicationDocumentsDirectory()
         .then((value) => this.filesPath = value.path + '/images/');
+
     UpdateData.getInstance().then((value) async {
       SharedPrefHandler.getInstance().then((vala) async {
         _sharedPrefHandler = vala;
       });
       updator = value;
+
       updator.onSyncSearch.listen((bool event) {
         setState(() {
           this.searchInProgress = event;
         });
       });
+
       updator.onSync.listen((bool syncState) => setState(() {
             isLoading = syncState;
             if (isLoading) {
               return false;
             }
           }));
+
       await updator.run();
       user = updator.theuser;
     });
@@ -173,100 +179,65 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
         ],
       ),
-      body: BlocBuilder<TabIndex, int>(
-        // ignore: missing_return
-        builder: (context, int val) {
-          if (val == 1) {
-            // return Home Screen
-            return IdeasPage(CategorySelector: CategorySelector,  filesPath: filesPath,  searchinProgress: searchInProgress,  setTabName: setTabName,);
-          } else if (val == 2) {
-            // Return Chat screen
-          } else if (val == 3) {
-            // return GroupScreen
-          }
-        },
-      ),
-    );
-  }
-}
-
-class IdeasPage extends StatelessWidget {
-  final searchInProgress;
-  final Function setTabName;
-  final filesPath;
-  final CategorySelector;
-  const IdeasPage({Key key  , this searchinProgress  , this.setTabName , this.filesPath , this.CategorySelector   , }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return CisLoading
-        ? Center(
-            child: CircularProgressIndicator(
-            backgroundColor: Theme.of(context).primaryColor,
-          ))
-        : Column(
-            children: [
-              CategorySelector(setTabName: setTabName),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  // padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      // FavouriteContact(),
-                      searchInProgress
-                          ? Column(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                ),
-                                Center(
-                                  child: CircularProgressIndicator(
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                  ),
-                                )
-                              ],
-                            )
-                          : searching
-                              ? (searchResultUsers.length > 0
-                                  ? SearchResult(
-                                      filesPath: filesPath,
-                                    )
-                                  : Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 50,
-                                        ),
-                                        Center(
-                                          child: Center(
-                                            child: Text(
-                                              " No Result Found ... ",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
-                                                fontStyle: FontStyle.italic,
-                                                color: Colors.black54,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ))
-                              : RecentChats(
-                                  filesPath: filesPath,
-                                ),
-                    ],
-                  ),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor,
+            ))
+          : Column(
+              children: [
+                // This is the category class where the Home  , Chat mnamn Navigations resides
+                CategorySelector(
+                  selectedIndex: 0,
                 ),
-              ),
-            ],
-          );
+                BlocBuilder<TabIndex, int>(builder: (_, val) {
+                  switch (val) {
+                    case 0:
+                      {
+                        return Expanded(child : Container(color: Colors.blue) , );
+                      }
+                    case 1:
+                      {
+                        return Chats(
+                          filesPath: filesPath,
+                          searchInProgress: searchInProgress,
+                          searching: searching,
+                        );
+                      }
+                    
+                    case 2:
+                      {
+                        return Expanded(child : Container(color: Colors.green) , );
+                      }
+                    case 3:
+                      {
+                        return Expanded(child : Container(color: Colors.yellow), );
+                      }
+                    default:
+                      {
+                        return Chats(
+                          filesPath: filesPath,
+                          searchInProgress: searchInProgress,
+                          searching: searching,
+                        );
+                      }
+                  }
+                }),
+                // PageView(
+                //     controller: pageController,
+                //     children: [
+                //       Chats(
+                //         filesPath: filesPath,
+                //         searchInProgress: searchInProgress,
+                //         searching: searching,
+                //       ),
+                //       Container(color: Colors.blue),
+                //       Container(color: Colors.green),
+                //       Container(color: Colors.yellow),
+                //     ],
+                //   ),
+              ],
+            ),
+    );
   }
 }

@@ -3,6 +3,8 @@ import 'package:ChatUI/screens/auth_screen.dart';
 import 'package:ChatUI/screens/chat_screen.dart';
 import 'package:ChatUI/models/user_model.dart';
 import 'package:ChatUI/screens/home_screen.dart';
+import 'package:ChatUI/stateClasses/friends_bloc.dart';
+import 'package:ChatUI/stateClasses/tab_index_state.dart';
 import 'package:ChatUI/stateClasses/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,11 +13,6 @@ import 'package:ChatUI/stateClasses/state_observer.dart';
 
 void main() {
   Bloc.observer = ValuesObserver();
-  SharedPrefHandler handler;
-  SharedPrefHandler.getInstance().then((instance) {
-    handler = instance; 
-  });
-  // Alie user = await handler.getUser();
   runApp(MyApp(null));
 }
 
@@ -29,8 +26,29 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => UserCubit(),
+        ), // FriendsBloc
+        BlocProvider(
+          create: (_) => TabIndex( ),
+        ),
+        BlocProvider(
+          create: (_) => FriendsBloc(),
         ),
       ],
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+*/
       child: MaterialApp(
         title: 'Flutter Chat UI',
         debugShowCheckedModeBanner: false,
