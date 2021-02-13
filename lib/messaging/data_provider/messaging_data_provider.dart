@@ -1,29 +1,27 @@
 import 'dart:developer';
 import 'dart:typed_data';
-import 'package:http/http.dart';
 import 'package:ChatUI/libs.dart';
-
+import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:async';
 
-class HttpCallHandler extends Service {
+class MessagingDataProvider extends Service {
   Client client = new Client();
 
   // Header Data Will be listed here ...
 
-  static HttpCallHandler _handler;
-
+  static MessagingDataProvider _handler;
   static SessionHandler _sessHandler;
 
-  static const String host = "http://10.0.3.2:8080/";
+  static const String host =   StaticDataStore.HOST;
 
-  static Future<HttpCallHandler> getInstance() async {
+  static Future<MessagingDataProvider> getInstance() async {
     if (_sessHandler == null) {
       var pref = await SharedPrefHandler.getInstance();
       _sessHandler = await SessionHandler(pref);
     }
     if (_handler == null) {
-      _handler = new HttpCallHandler();
+      _handler = new MessagingDataProvider();
       return _handler;
     }
     return _handler;
