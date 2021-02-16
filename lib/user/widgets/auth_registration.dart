@@ -1,5 +1,6 @@
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthRegistration extends StatefulWidget {
   final Function(int val) function;
@@ -10,6 +11,7 @@ class AuthRegistration extends StatefulWidget {
 }
 
 class _AuthRegistrationState extends State<AuthRegistration> {
+  bool loading = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -19,7 +21,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
     confirmController = new TextEditingController();
     emailController = new TextEditingController();
     HttpCallHandler.getInstance().then((value) {
-      httpHandler = value; 
+      httpHandler = value;
     });
     super.initState();
   }
@@ -30,9 +32,10 @@ class _AuthRegistrationState extends State<AuthRegistration> {
   TextEditingController emailController;
   bool warningMessage = false;
   HttpCallHandler httpHandler;
-  String message;
+  String message = "";
   @override
   Widget build(BuildContext context) {
+    final userprov = BlocProvider.of<UserCubit>(context);
     return GestureDetector(
       onTap: () => Focus.of(context).dispose(),
       child: Container(
@@ -77,14 +80,21 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Text(
-                            "$message",
-                            style: TextStyle(
-                              color: warningMessage ? Colors.red : Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
+                          loading
+                              ? CircularProgressIndicator(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                )
+                              : Text(
+                                  "$message",
+                                  style: TextStyle(
+                                    color: warningMessage
+                                        ? Colors.red
+                                        : Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
                           TextField(
                             autocorrect: true,
                             autofocus: true,
@@ -132,7 +142,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                             obscureText: true,
                             decoration: InputDecoration(
                               labelText: "Confirm Password",
-                              hintText: "***********",
+                              hintText: "",
                               hintStyle: TextStyle(
                                 color: Theme.of(context).accentColor,
                               ),
@@ -154,6 +164,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                                     emailController.text == "" &&
                                     confirmController.text == '') {
                                   this.setState(() {
+                                    this.loading = false;
                                     this.message = "Please Fill Entries ";
                                     warningMessage = true;
                                   });
@@ -203,23 +214,33 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                                   confirmpassword: confirmController.text,
                                   username: usernameController.text,
                                 );
-
-                                httpHandler.Register(input).then((value) {
+                                this.loading = true;
+                                //      totalContext
+                                // .read<TabIndex>()
+                                // .add(TabChangeEvent.groups);
+                                userprov.register(input).then((value) {
                                   if (value == null) {
                                     setState(() {
+                                      this.loading = false;
                                       message =
                                           "Registration Was Not Succesful Try again";
                                       warningMessage = true;
                                     });
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            HomeScreen.Route, (route) => false);
                                   } else if (!value.success) {
                                     setState(() {
+                                      this.loading = false;
                                       this.message = value.message;
                                       warningMessage = true;
                                     });
-                                    Navigator.of(context).pushNamedAndRemoveUntil(
-                                      HomeScreen.Route, (route) => false);
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            HomeScreen.Route, (route) => false);
                                   } else {
                                     setState(() {
+                                      this.loading = false;
                                       this.message = value.message;
                                       this.warningMessage = false;
                                     });
@@ -232,7 +253,6 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                           ),
                           FlatButton(
                             onPressed: () {
-                              print("The Registration ");
                               widget.function(0);
                             },
                             child: Text(

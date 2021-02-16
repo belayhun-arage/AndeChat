@@ -1,8 +1,9 @@
 import 'package:ChatUI/libs.dart';
+import 'package:ChatUI/user/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
   Bloc.observer = ValuesObserver();
   runApp(MyApp(null));
 }
@@ -16,16 +17,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => UserCubit(),
+          create: (_) => FriendsState.getInstance(),
+        ),
+        BlocProvider(
+          create: (_) => UserCubit( repo: UserRepository() ),
         ), // FriendsBloc
         BlocProvider(
-          create: (_) => TabIndex( ),
+          create: (_) => TabIndex(),
         ),
         BlocProvider(
-          create: (_) => FriendsBloc(),
-        ),
-        BlocProvider(
-          create: ( _ )=> OnlineFriends.instance,
+          create: (_) => OnlineFriends.instance,
         ),
       ],
 

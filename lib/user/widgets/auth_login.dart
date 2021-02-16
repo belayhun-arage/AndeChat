@@ -1,6 +1,7 @@
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthLogin extends StatefulWidget {
   final Function function;
@@ -12,6 +13,7 @@ class AuthLogin extends StatefulWidget {
 class _AuthLoginState extends State<AuthLogin> {
   String email = "";
   String password = "";
+  bool loading = false;
 
   TextEditingController emailController;
   TextEditingController passwordController;
@@ -21,8 +23,8 @@ class _AuthLoginState extends State<AuthLogin> {
   String message = "";
   @override
   void initState() {
-    SharedPrefHandler.getInstance().then((instance){
-      this.handler = instance ; 
+    SharedPrefHandler.getInstance().then((instance) {
+      this.handler = instance;
     });
     HttpCallHandler.getInstance().then((value) {
       httpHandler = value;
@@ -32,8 +34,11 @@ class _AuthLoginState extends State<AuthLogin> {
     super.initState();
   }
 
+  BuildContext gcontext;
   @override
   Widget build(BuildContext context) {
+    // final prov = BlocProvider.of<UserCubit>(context);
+    this.gcontext = context;
     if (emailController == null) {
       this.emailController = new TextEditingController();
     }
@@ -76,12 +81,16 @@ class _AuthLoginState extends State<AuthLogin> {
                       children: [
                         Container(
                           padding: EdgeInsets.all(10.0),
-                          child: Text(
-                            message,
-                            style: TextStyle(
-                              color: warningMessage ? Colors.red : Colors.green,
-                            ),
-                          ),
+                          child: this.loading
+                              ? CircularProgressIndicator()
+                              : Text(
+                                  message,
+                                  style: TextStyle(
+                                    color: warningMessage
+                                        ? Colors.red
+                                        : Colors.green,
+                                  ),
+                                ),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(9),
                               border: Border.all(
@@ -118,7 +127,7 @@ class _AuthLoginState extends State<AuthLogin> {
                           obscureText: true,
                           decoration: InputDecoration(
                             labelText: "Password",
-                            hintText: "***** secret password here ...",
+                            hintText: "",
                             hintStyle: TextStyle(
                               color: Color(0XFFaaaaaa),
                             ),
@@ -157,12 +166,15 @@ class _AuthLoginState extends State<AuthLogin> {
                               }
                               email = emailController.text;
                               password = passwordController.text;
-                              var loginres = await httpHandler.Login(
-                                  this.email, this.password);
+                              this.loading = true;
+                              var loginres = await gcontext
+                                  .read<UserCubit>()
+                                  .loginUser(email, password);
 
                               if (loginres != null) {
                                 if (loginres.success) {
                                   setState(() {
+                                    this.loading = false;
                                     message = loginres.message;
                                     warningMessage = false;
                                   });
@@ -171,12 +183,14 @@ class _AuthLoginState extends State<AuthLogin> {
                                       HomeScreen.Route, (route) => false);
                                 } else {
                                   setState(() {
+                                    this.loading = false;
                                     message = loginres.message;
                                     warningMessage = true;
                                   });
                                 }
                               } else {
                                 setState(() {
+                                  this.loading = false;
                                   message = "Error Happened .. ";
                                   warningMessage = true;
                                 });

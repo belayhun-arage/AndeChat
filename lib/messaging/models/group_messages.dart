@@ -37,5 +37,13 @@ class GroupMessage {
     }
     return gmessage;
   }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      // "status": this.status,
+      // "body": this.body,
+    };
+  }
 }
 

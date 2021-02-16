@@ -1,7 +1,10 @@
 /*This File containes a User Model named Alie 
 ****** and it's methods + static functions.
  */
+import 'package:ChatUI/messaging/data_provider/messaging_data_provider.dart';
 import 'package:ChatUI/service/http_service.dart';
+import 'package:ChatUI/user/user.dart';
+
 class Alie {
   final String id;
   final String imageUrl;
@@ -10,9 +13,9 @@ class Alie {
   final String lastUpdatedTime;
   final String lastSeen;
   final String username;
-  int idesCount ;
-  bool online=false ;
-  bool typing=false;
+  int idesCount;
+  bool online = false;
+  bool typing = false;
   List<String> myalies;
   List<String> mygroups;
   List<EEMessage> messages;
@@ -68,7 +71,7 @@ class Alie {
   /// populateChats populates the alie messages field
   /// it returns a bool telling whether the request was
   /// succesful or not
-  Future<bool> populateChats(HttpCallHandler handler) async {
+  Future<bool> populateChats(MessagingDataProvider handler) async {
     List<EEMessage> ourMessages = await handler.getOurChats(this.id);
     if (ourMessages == null) {
       this.messages = [];
@@ -170,6 +173,18 @@ class EEMessage {
       print(e.toString());
       return null;
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message_number': this.messageNumber , 
+      "receiver_id" : this.receiverID , 
+      "seen" : seen ,  
+      "sent" : this.sent ,
+      "sender_id" : this.senderID , 
+      "text" : this.text  , 
+      "time" : this.time , 
+    };
   }
 
   /// allMessagesFromJson returning a list of EEMessage instancec from a list of map

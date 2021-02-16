@@ -6,16 +6,24 @@ import 'package:ChatUI/libs.dart';
 import 'dart:convert';
 import 'dart:async';
 
+// This HTTP CALL Handler class is to be called by all the 
+// data_provider classes of each features 
 class HttpCallHandler extends Service {
   Client client = new Client();
 
   // Header Data Will be listed here ...
-
   static HttpCallHandler _handler;
-
   static SessionHandler _sessHandler;
+  static const String HOST = StaticDataStore.HOST;
+  // static const String HOST = "http://10.0.3.2:8080/";
 
-  static const String host = "http://10.0.3.2:8080/";
+  static Future<SessionHandler> get sessionHandler async {
+    if (_handler == null) {
+      await HttpCallHandler.getInstance();
+      return _sessHandler;
+    }
+    return _sessHandler; 
+  }
 
   static Future<HttpCallHandler> getInstance() async {
     if (_sessHandler == null) {
@@ -28,110 +36,14 @@ class HttpCallHandler extends Service {
     }
     return _handler;
   }
-
-  Future<RegistrationRes> Register(RegistrationInput input) async {
-    Map<String, String> headers = await _sessHandler.getHeader();
-    if (headers == null) {
-      headers = {};
-    }
-    headers["Content-Type"] = "application/json";
-    final response = await client.post(
-      "${host}api/user/new/",
-      body: jsonEncode({
-        "username": input.username,
-        "password": input.password,
-        "confirmpassword": input.confirmpassword,
-        "email": input.email,
-      }),
-      headers: headers,
-    );
-    if (response.statusCode == 200) {
-      var body = jsonDecode(response.body) as Map<String, dynamic>;
-      if (body == null) {
-        return null;
-      } else {
-        _sessHandler.updateCookie(response);
-        return RegistrationRes.fromJSON(body);
-      }
-    }
-    return null;
-  }
-
-  Future<LoginRes> Login(String email, String password) async {
-    var response = await client.post("${host}api/user/login/",
-        body: jsonEncode({"email": email, "password": password}),
-        headers: {
-          "Content-Type": "application/json",
-        });
-    if (response != null && response.statusCode == 200) {
-      try {
-        var body = jsonDecode(response.body) as Map<String, dynamic>;
-        _sessHandler.updateCookie(response);
-        return LoginRes.fromJson(body);
-      } catch (e, a) {
-        print(e.toString());
-        return null;
-      }
-    }
-    return null;
-  }
-
-  Future<Alie> getMyProfile() async {
-    Map<String, String> headers = await _sessHandler.getHeader();
-    if (headers == null) {
-      headers = {};
-    }
-    var response = await client.get(
-      "${host}api/user/myprofile/",
-      headers: headers,
-    );
-    if (response == null) {
-      return null;
-    }
-    if (response.statusCode == 200) {
-      try {
-        var body = jsonDecode(response.body) as Map<String, dynamic>;
-        print(body);
-        _sessHandler.updateCookie(response);
-        if (!(body['success'] as bool)) {
-          return null;
-        }
-        return Alie.fromJson(body["user"] as Map<String, dynamic>);
-      } catch (e, a) {
-        return null;
-      }
-    }
-  }
-
+  
   Future<Uint8List> getProfileImage(String imageurl) async {
-    var response = await client.get("${host}$imageurl");
+    var response = await client.get("${HOST}$imageurl");
     if (response != null) {
       return response.bodyBytes;
     }
     return null;
   }
-
-  Future<Map<String, dynamic>> getMyFriends() async {
-    Map<String, String> headers = await _sessHandler.getHeader();
-    if (headers == null) {
-      headers = {};
-    }
-    var response = await client.get(
-      "${host}api/user/friends/",
-      headers: headers,
-    );
-    if (response != null && response.statusCode == 200) {
-      try {
-        var body = jsonDecode(response.body) as Map<String, dynamic>;
-        _sessHandler.updateCookie(response);
-        return body;
-      } catch (e, a) {
-        return null;
-      }
-    }
-    return null;
-  }
-
   /// getOutChats returning the messages between the user and the alie
   /// whose id is used in the argument
   /// returning future of List of messages  if success
@@ -142,7 +54,7 @@ class HttpCallHandler extends Service {
       headers = {};
     }
     var response = await client.get(
-      "${host}api/user/friend/messages/?friend_id=$id&last_message_number=0",
+      "${HOST}api/user/friend/messages/?friend_id=$id&last_message_number=0",
       headers: headers,
     );
     if (response != null && response.statusCode == 200) {
@@ -181,7 +93,7 @@ class HttpCallHandler extends Service {
       headers = {};
     }
     var response = await client.get(
-      "${host}api/user/search/?username=$username",
+      "${HOST}api/user/search/?username=$username",
       headers: headers,
     );
     if (response != null && response.statusCode == 200) {

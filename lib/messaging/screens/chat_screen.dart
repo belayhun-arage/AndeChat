@@ -13,6 +13,18 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  static WebSocketService websocketService;
+
+  @override
+  void initState() {
+    if (websocketService == null) {
+      WebSocketService.getInstance().then((ws) {
+        websocketService = ws;
+      });
+    }
+    super.initState();
+  }
+
   Widget _buildMessage(EEMessage message, bool isMe) {
     final messageBody = Container(
       width: MediaQuery.of(context).size.width * 0.65,
@@ -49,14 +61,14 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
-              message.time,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
+          Text(
+            message.time,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
             ),
+          ),
           SizedBox(
             height: 10.0,
           ),
@@ -71,12 +83,14 @@ class _ChatScreenState extends State<ChatScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: SizedBox() , ) , 
+              Expanded(
+                child: SizedBox(),
+              ),
               isMe
-              ? Icon(message.seen && message.sent
-                  ? Icons.mark_chat_read
-                  : Icons.check)
-              : SizedBox()
+                  ? Icon(message.seen && message.sent
+                      ? Icons.mark_chat_read
+                      : Icons.check)
+                  : SizedBox()
             ],
           )
         ],
@@ -112,14 +126,16 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       final String messageText = textInputController.text;
       textInputController.text = "";
-      final Message mess = Message(
-        isLiked: false,
-        sender: widget.user,
+      final EEMessage mess = EEMessage(
+        receiverID: widget.user.id,
+        seen: false,
+        senderID: myid,
+        sent: false,
         text: messageText,
-        time: timeValue,
-        unread: true,
       );
-      messageso.insert(0, mess);
+
+      websocketService.sendEEMessage(mess);
+      // messageso.insert(0, mess);
     });
   }
 

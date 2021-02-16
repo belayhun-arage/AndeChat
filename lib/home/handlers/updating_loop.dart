@@ -10,9 +10,15 @@ class UpdateData {
   Alie theuser;
   static UpdateData _updateData;
   static SharedPrefHandler _sharedPrefHandler;
-  static HttpCallHandler _httpHandler;
+  static UserDataProvider userDataProvider;
   Alie get profile => theuser;
   static String filePath;
+
+  static UserCubit userState;
+  static FriendsState firendsState;
+  static InteractiveUser activeUser;
+  static OnlineFriends onlineFriendsStates;
+  static MessagingDataProvider messagingDataProvider;
 
   static StreamController<bool> onSyncController = StreamController();
   static StreamController<bool> onSyncSearchController = StreamController();
@@ -20,31 +26,74 @@ class UpdateData {
   Stream<bool> get onSyncSearch => onSyncSearchController.stream;
 
   static Future<UpdateData> getInstance() async {
+    if (userState == null) {
+      userState = UserCubit.instance;
+    }
+    if (firendsState == null) {
+      firendsState = FriendsState.getInstance();
+    }
+    if (activeUser == null) {
+      activeUser = InteractiveUser.instance;
+    }
+    if (onlineFriendsStates == null) {
+      onlineFriendsStates = OnlineFriends.instance;
+    }
+    if (messagingDataProvider == null) {
+      MessagingDataProvider.getInstance().then((mdp) {
+        messagingDataProvider = mdp;
+      });
+    }
     if (onSyncController == null) {
       onSyncController = new StreamController();
     }
-    if (_updateData == null) {
-      if (_sharedPrefHandler == null) {
-        _sharedPrefHandler = await SharedPrefHandler.getInstance();
-      }
-      if (_httpHandler == null) {
-        _httpHandler = await HttpCallHandler.getInstance();
-      }
-      _updateData = UpdateData();
+    if (_sharedPrefHandler == null) {
+      _sharedPrefHandler = await SharedPrefHandler.getInstance();
     }
+    if (userDataProvider == null) {
+      userDataProvider = await UserDataProvider.getInstance();
+    }
+    if (messagingDataProvider == null) {
+      messagingDataProvider = await MessagingDataProvider.getInstance();
+    }
+    _updateData = UpdateData();
+
     return _updateData;
   }
 
+  static Future<void> instantiateStates() async {
+    if (userState == null) {
+      userState = UserCubit.instance;
+    }
+    if (_sharedPrefHandler == null) {
+      _sharedPrefHandler = await SharedPrefHandler.getInstance();
+    }
+    if (userDataProvider == null) {
+      userDataProvider = await UserDataProvider.getInstance();
+    }
+    if (messagingDataProvider == null) {
+      messagingDataProvider = await MessagingDataProvider.getInstance();
+    }
+    if (firendsState == null) {
+      firendsState = FriendsState.getInstance();
+    }
+    if (activeUser == null) {
+      activeUser = InteractiveUser.instance;
+    }
+    if (onlineFriendsStates == null) {
+      onlineFriendsStates = OnlineFriends.instance;
+    }
+    _updateData = UpdateData();
+  }
+
   void run() async {
+    instantiateStates();
     while (theuser == null) {
       await Future<void>.delayed(Duration(seconds: 0), () async {
         // await _httpHandler.
         onSyncController.add(true);
 
-        this.theuser = await _httpHandler.getMyProfile();
-        print("The User Found Is ${this.theuser}");
+        this.theuser = await userDataProvider.getMyProfile();
         if (theuser != null) {
-          print('${theuser.username} , ${theuser.bio}');
         } else {
           return;
         }
@@ -54,15 +103,9 @@ class UpdateData {
         myid = theuser.id;
         final users = await getFriends();
         if (users != null && users.length > 0) {
-          print("The Length of Users List ${users.length}");
           for (var usr in users) {
-            bool result = await usr.populateChats(_httpHandler);
-            if (!result) {
-              print(
-                  "fetching messages was not succesful .. error has happened ...");
-            } else {
-              print('succesfuly fetched messages nigga .');
-            }
+            bool result = await usr.populateChats(messagingDataProvider);
+
             await downloadImage(usr);
           }
           int ctr = 0;
@@ -74,34 +117,33 @@ class UpdateData {
             }
           }
         }
-        print('Number of Found Friends ${users.length}');
-        alies.addAll(users);
+        // print('Number of Found Friends ${users.length}');
+        // alies.addAll(users);
+//
+        if (firendsState == null) {
+          await Future.delayed(Duration(seconds: 3), () async {
+            firendsState = await FriendsState.getInstance();
+          });
+        }
+        firendsState.updateFriendsState(users);
+
         onSyncController.add(false);
       });
     }
   }
 
-  Future<List<Alie>> getFriends() async {
+  static Future<List<Alie>> getFriends() async {
     List<Alie> friends = [];
-    final usersJson = await _httpHandler.getMyFriends();
-    if ((usersJson['success'] as bool) == true) {
-      print(usersJson['alies'] as List<dynamic>);
-      List<Map<String, dynamic>> newmapListUser = [];
-      for (int a = 0; a < usersJson['alies'].length; a++) {
-        newmapListUser.add(usersJson['alies'][a] as Map<String, dynamic>);
-      }
-      friends = Alie.AllUsers(newmapListUser);
-      return friends;
-    } else {
-      return friends;
-    }
+    friends = await userDataProvider.getMyFriends();
+    return friends;
   }
 
   // Future<List<Group>>  getGroups() async {
 
   // }
 
-  Future<bool> downloadImage(Alie user) async {
+  static Future<bool> downloadImage(Alie user) async {
+    instantiateStates();
     if (user == null || user.imageUrl == "") {
       return false;
     }
@@ -119,7 +161,8 @@ class UpdateData {
     if (file2.existsSync()) {
       return false;
     }
-    Uint8List bodyBytes = await _httpHandler.getProfileImage(theuser.imageUrl);
+    Uint8List bodyBytes =
+        await userDataProvider.getProfileImage(userState.state.imageUrl);
     if (!(bodyBytes == null || bodyBytes.length == 0)) {
       // valie image found now i am saving to the localstorage
 
@@ -131,42 +174,18 @@ class UpdateData {
   }
 
   Future<void> searchUsers(String username) async {
+    instantiateStates();
     onSyncSearchController.add(true);
-    final result = await _httpHandler.searchUsers(username);
+    final result = await userDataProvider.searchUsers(username);
     if (result == null) {
       print("Error Searching Users by username $username");
       return;
     }
     searchResultUsers = result;
     for (var usr in searchResultUsers) {
-      bool result = await usr.populateChats(_httpHandler);
+      bool result = await usr.populateChats(messagingDataProvider);
       await downloadImage(usr);
     }
     onSyncSearchController.add(false);
   }
-  /*var documentDirectory = await getApplicationDocumentsDirectory();
-          var firstPath = "${documentDirectory.path}/images/";
-          filePath = firstPath;
-          var dir = theuser.imageUrl.split("/");
-
-          var filePathAndName = firstPath + dir[dir.length - 1];
-          // saving the file path to the shared preferences
-          _sharedPrefHandler.setFilePath(firstPath);
-
-          await Directory(firstPath).create(recursive: true);
-          File file2 = new File(filePathAndName);
-          if (file2.existsSync()) {
-            onSyncController.add(false);
-            return;
-          }
-          Uint8List bodyBytes =
-              await _httpHandler.getProfileImage(theuser.imageUrl);
-          if (!(bodyBytes == null || bodyBytes.length == 0)) {
-            // valie image found now i am saving to the localstorage
-
-            file2.writeAsBytesSync(
-              bodyBytes,
-            );
-            print("Downloading nigga ... ");
-          }*/
 }
