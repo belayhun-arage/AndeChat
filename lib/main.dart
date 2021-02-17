@@ -1,17 +1,9 @@
-import 'package:ChatUI/data_store/shared_pref.dart';
-import 'package:ChatUI/screens/auth_screen.dart';
-import 'package:ChatUI/screens/chat_screen.dart';
-import 'package:ChatUI/models/user_model.dart';
-import 'package:ChatUI/screens/home_screen.dart';
-import 'package:ChatUI/stateClasses/friends_bloc.dart';
-import 'package:ChatUI/stateClasses/tab_index_state.dart';
-import 'package:ChatUI/stateClasses/user_cubit.dart';
+import 'package:ChatUI/libs.dart';
+import 'package:ChatUI/user/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc/src/bloc_provider.dart';
-import 'package:ChatUI/stateClasses/state_observer.dart';
 
-void main() {
+void main() async {
   Bloc.observer = ValuesObserver();
   runApp(MyApp(null));
 }
@@ -25,13 +17,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => UserCubit(),
-        ), // FriendsBloc
-        BlocProvider(
-          create: (_) => TabIndex( ),
+          create: (_) => FriendsState.getInstance(),
         ),
         BlocProvider(
-          create: (_) => FriendsBloc(),
+          create: (_) => UserCubit( repo: UserRepository() ),
+        ), // FriendsBloc
+        BlocProvider(
+          create: (_) => TabIndex(),
+        ),
+        BlocProvider(
+          create: (_) => OnlineFriends.instance,
         ),
       ],
 
