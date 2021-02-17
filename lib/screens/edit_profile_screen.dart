@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 
 class EditProfile extends StatefulWidget {
@@ -21,8 +22,9 @@ class _EditProfileState extends State<EditProfile> {
                 // begin: Alignment.topRight,
                 // end: Alignment.bottomLeft,
               
-                //colors: [Colors.black54, Color.fromRGBO(0, 41, 102, 1)]
+               // colors: [Colors.black54, Color.fromRGBO(0, 41, 102, 1)]
                 colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)]
+               
               )
             ),
 

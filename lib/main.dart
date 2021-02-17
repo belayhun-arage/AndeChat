@@ -37,17 +37,6 @@ class MyApp extends StatelessWidget {
 
 /*
 
-
-
-
-
-
-
-
-
-
-
-
 */
       child: MaterialApp(
         title: 'Flutter Chat UI',

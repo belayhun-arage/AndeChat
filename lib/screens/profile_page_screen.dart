@@ -50,7 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
                 //colors: [Colors.black54, Color.fromRGBO(0, 41, 102, 1)]
-                colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)]),
+                colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)],
+                ),
           ),
           child: Padding(
             padding: EdgeInsets.fromLTRB(30, 50, 30, 30),
@@ -115,7 +116,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   // end: Alignment.bottomLeft,
 
                   //colors: [Colors.black54, Color.fromRGBO(0, 41, 102, 1)]
-                  colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)])),
+              //    colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)],
+                  ),
+                  ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -200,7 +203,9 @@ class _MyHomePageState extends State<MyHomePage> {
         Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)])),
+                //  colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)],
+                  ),
+                  ),
           child: Center(
             child: Container(
               child: Column(
@@ -245,7 +250,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)])),
+             //       colors: [Colors.black54, Color.fromRGBO(21, 34, 56, 1)],
+                    ),),
             child: Column(
               children: <Widget>[
                 Padding(
