@@ -14,7 +14,7 @@ class UpdateData {
   Alie get profile => theuser;
   static String filePath;
 
-  static UserCubit userState;
+  static UserState userState;
   static FriendsState firendsState;
   static InteractiveUser activeUser;
   static OnlineFriends onlineFriendsStates;
@@ -26,43 +26,44 @@ class UpdateData {
   Stream<bool> get onSyncSearch => onSyncSearchController.stream;
 
   static Future<UpdateData> getInstance() async {
-    if (userState == null) {
-      userState = UserCubit.instance;
+    if (_updateData == null) {
+      if (userState == null) {
+        userState = UserState.instance;
+      }
+      if (firendsState == null) {
+        firendsState = FriendsState.getInstance();
+      }
+      if (activeUser == null) {
+        activeUser = InteractiveUser.instance;
+      }
+      if (onlineFriendsStates == null) {
+        onlineFriendsStates = OnlineFriends.instance;
+      }
+      if (messagingDataProvider == null) {
+        MessagingDataProvider.getInstance().then((mdp) {
+          messagingDataProvider = mdp;
+        });
+      }
+      if (onSyncController == null) {
+        onSyncController = new StreamController();
+      }
+      if (_sharedPrefHandler == null) {
+        _sharedPrefHandler = await SharedPrefHandler.getInstance();
+      }
+      if (userDataProvider == null) {
+        userDataProvider = await UserDataProvider.getInstance();
+      }
+      if (messagingDataProvider == null) {
+        messagingDataProvider = await MessagingDataProvider.getInstance();
+      }
+      _updateData = UpdateData();
     }
-    if (firendsState == null) {
-      firendsState = FriendsState.getInstance();
-    }
-    if (activeUser == null) {
-      activeUser = InteractiveUser.instance;
-    }
-    if (onlineFriendsStates == null) {
-      onlineFriendsStates = OnlineFriends.instance;
-    }
-    if (messagingDataProvider == null) {
-      MessagingDataProvider.getInstance().then((mdp) {
-        messagingDataProvider = mdp;
-      });
-    }
-    if (onSyncController == null) {
-      onSyncController = new StreamController();
-    }
-    if (_sharedPrefHandler == null) {
-      _sharedPrefHandler = await SharedPrefHandler.getInstance();
-    }
-    if (userDataProvider == null) {
-      userDataProvider = await UserDataProvider.getInstance();
-    }
-    if (messagingDataProvider == null) {
-      messagingDataProvider = await MessagingDataProvider.getInstance();
-    }
-    _updateData = UpdateData();
-
     return _updateData;
   }
 
   static Future<void> instantiateStates() async {
     if (userState == null) {
-      userState = UserCubit.instance;
+      userState = UserState.instance;
     }
     if (_sharedPrefHandler == null) {
       _sharedPrefHandler = await SharedPrefHandler.getInstance();
@@ -82,30 +83,36 @@ class UpdateData {
     if (onlineFriendsStates == null) {
       onlineFriendsStates = OnlineFriends.instance;
     }
-    _updateData = UpdateData();
+    // if (_updateData == null) {
+    //   await UpdateData.getInstance().then((ud) {
+
+    //   });
+    // }
   }
 
   void run() async {
     instantiateStates();
-    while (theuser == null) {
+    while (StaticDataStore.userState.state == null) {
       await Future<void>.delayed(Duration(seconds: 0), () async {
         // await _httpHandler.
         onSyncController.add(true);
 
-        this.theuser = await userDataProvider.getMyProfile();
-        if (theuser != null) {
-        } else {
+        if (userState == null) {
+          userState = UserState.instance;
+        }
+        await StaticDataStore.userState.getMyProfile();
+        
+        if (StaticDataStore.userState.state == null) {
           return;
         }
-        if (theuser.imageUrl != '' && theuser.imageUrl.split('/').length > 0) {
-          await downloadImage(this.theuser);
+        if (StaticDataStore.userState.state.imageUrl != '' && StaticDataStore.userState.state.imageUrl.split('/').length > 0) {
+          await downloadImage(StaticDataStore.userState.state);
         }
-        myid = theuser.id;
+        StaticDataStore.ID = StaticDataStore.userState.state.id;
         final users = await getFriends();
         if (users != null && users.length > 0) {
           for (var usr in users) {
             bool result = await usr.populateChats(messagingDataProvider);
-
             await downloadImage(usr);
           }
           int ctr = 0;
@@ -120,12 +127,8 @@ class UpdateData {
         // print('Number of Found Friends ${users.length}');
         // alies.addAll(users);
 //
-        if (firendsState == null) {
-          await Future.delayed(Duration(seconds: 3), () async {
-            firendsState = await FriendsState.getInstance();
-          });
-        }
-        firendsState.updateFriendsState(users);
+        firendsState = StaticDataStore.friendsState;
+        firendsState.fetchMyAlies();
 
         onSyncController.add(false);
       });
@@ -181,8 +184,8 @@ class UpdateData {
       print("Error Searching Users by username $username");
       return;
     }
-    searchResultUsers = result;
-    for (var usr in searchResultUsers) {
+    StaticDataStore.searchResultUsers = result;
+    for (var usr in StaticDataStore.searchResultUsers) {
       bool result = await usr.populateChats(messagingDataProvider);
       await downloadImage(usr);
     }

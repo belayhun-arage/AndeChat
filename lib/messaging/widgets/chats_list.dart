@@ -36,7 +36,7 @@ class Chats extends StatelessWidget {
                     ],
                   )
                 : searching
-                    ? (searchResultUsers.length > 0
+                    ? (StaticDataStore.searchResultUsers.length > 0
                         ? SearchResult(
                             filesPath: filesPath,
                           )

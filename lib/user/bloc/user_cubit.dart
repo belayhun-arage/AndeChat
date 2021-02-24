@@ -2,9 +2,9 @@ import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/user/repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UserCubit extends Cubit<Alie> {
-  static UserCubit _instance;
-  UserCubit({this.repo})
+class UserState extends Cubit<Alie> {
+  static UserState _instance;
+  UserState({this.repo})
       : assert(repo != null),
         super(null) {
     if (_instance == null) {
@@ -12,7 +12,7 @@ class UserCubit extends Cubit<Alie> {
     }
   }
 
-  static UserCubit get instance {
+  static UserState get instance {
     return _instance;
   }
 
@@ -28,5 +28,12 @@ class UserCubit extends Cubit<Alie> {
   /// register taking an input RegistrationInput
   Future<RegistrationRes> register(RegistrationInput input) {
     return this.repo.registerUser(input);
+  }
+
+  void getMyProfile() async {
+    final user = await this.repo.getMyProfile();
+    if (user != null) {
+      emit(user);
+    }
   }
 }

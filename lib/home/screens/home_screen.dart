@@ -1,4 +1,3 @@
-
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       if (this.searchEntryIsVisible) {
         this.searchEntryIsVisible = false;
-        searchResultUsers = [];
+        StaticDataStore.searchResultUsers = [];
       } else {
         this.searchEntryIsVisible = true;
         context.read<TabIndex>().add(TabChangeEvent.messages);
@@ -92,6 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (StaticDataStore.friendsState == null) {
+      print("Instantiating the firendsState Bloc ");
+      StaticDataStore.friendsState = context.read<FriendsState>();
+    }
+    StaticDataStore.friendsState.fetchMyAlies();
     print(this.filesPath);
     return Scaffold(
       backgroundColor:
@@ -104,14 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
       drawerEnableOpenDragGesture: true,
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: Icon(Icons.menu),
-        //   iconSize: 30,
-        //   color: Colors.white,
-        //   onPressed: () {
-        //     //
-        //   },
-        // ),
         title: isLoading
             ? SizedBox()
             : (this.searchEntryIsVisible

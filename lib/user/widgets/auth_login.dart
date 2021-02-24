@@ -38,6 +38,8 @@ class _AuthLoginState extends State<AuthLogin> {
   @override
   Widget build(BuildContext context) {
     // final prov = BlocProvider.of<UserCubit>(context);
+
+    StaticDataStore.friendsState = context.read<FriendsState>();
     this.gcontext = context;
     if (emailController == null) {
       this.emailController = new TextEditingController();
@@ -167,8 +169,9 @@ class _AuthLoginState extends State<AuthLogin> {
                               email = emailController.text;
                               password = passwordController.text;
                               this.loading = true;
-                              var loginres = await gcontext
-                                  .read<UserCubit>()
+                              StaticDataStore.userState =
+                                  await gcontext.read<UserState>();
+                              var loginres = await StaticDataStore.userState
                                   .loginUser(email, password);
 
                               if (loginres != null) {

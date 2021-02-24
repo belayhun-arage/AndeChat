@@ -1,7 +1,7 @@
 import 'dart:io';
-// import 'package:ChatUI/data_store/shared_pref.dart';
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyNavigation extends StatefulWidget {
   final Alie user;
@@ -11,18 +11,18 @@ class MyNavigation extends StatefulWidget {
 
   @override
   _MyNavigationState createState() {
-    return _MyNavigationState(user: user, filesPath: filesPath);
+    return _MyNavigationState(filesPath: filesPath);
   }
 }
 
 class _MyNavigationState extends State<MyNavigation> {
   String profileDir = '';
-  final Alie user;
+  // final Alie user;
   final String filesPath;
-  bool loading = false; 
-  _MyNavigationState({Key key, this.user, this.filesPath}) {
-    this.profileDir =
-        "${this.filesPath}${user.imageUrl.split('/')[user.imageUrl.split('/').length - 1]}";
+  bool loading = false;
+  _MyNavigationState({Key key, this.filesPath}) {
+    // this.profileDir =
+    //     "${this.filesPath}${user.imageUrl.split('/')[user.imageUrl.split('/').length - 1]}";
   }
 
   List<String> categories = [
@@ -60,32 +60,40 @@ class _MyNavigationState extends State<MyNavigation> {
                 child: Column(
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      child: widget.user.imageUrl == ""
-                          ? () {
-                              print(
-                                  "The File To Be shown is : ${this.profileDir} ");
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.file(
-                                  File('${this.profileDir}'),
-                                  height: 150,
-                                  width: 180,
+                    BlocBuilder<UserState, Alie>(
+                      builder: (context, user) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          child: user.imageUrl == ""
+                              ? () {
+                                  print(
+                                      "The File To Be shown is : ${this.profileDir} ");
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Image.file(
+                                      File('${this.profileDir}'),
+                                      height: 150,
+                                      width: 180,
+                                    ),
+                                  );
+                                }()
+                              : Image.asset(
+                                  "assets/images/greg.jpg",
                                 ),
-                              );
-                            }()
-                          : Image.asset(widget.user.imageUrl == ""
-                              ? "assets/images/greg.jpg"
-                              : widget.user.imageUrl),
+                        );
+                      },
                     ),
-                    Text(
-                      this.user.username,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    )
+                    BlocBuilder<UserState, Alie>(
+                      builder: (_, me) {
+                        Text(
+                          me.username,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

@@ -2,7 +2,6 @@ import 'package:ChatUI/libs.dart';
 import 'dart:async';
 
 class UserRepository {
-
   UserRepository() {
     UserDataProvider.getInstance().then((prov) {
       this.provider = prov;
@@ -14,15 +13,30 @@ class UserRepository {
   Future<Alie> getMyProfile() async {
     return this.provider.getMyProfile();
   }
-  Future<LoginRes> logUserIn(String email, String password)async {
+
+  Future<LoginRes> logUserIn(String email, String password) async {
     return await this.provider.Login(email, password);
   }
+
   Future<RegistrationRes> registerUser(
-      RegistrationInput registrationInput) async  {
+      RegistrationInput registrationInput) async {
     return await this.provider.Register(registrationInput);
   }
 
-  Future<List<Alie>> getMyFriends()async {
-    return  await this.provider.getMyFriends();
+  Future<List<Alie>> getMyFriends() async {
+    final friends = await this.provider.getMyFriends();
+    MessagingDataProvider provide = await MessagingDataProvider.getInstance();
+    for (int a = 0; a < friends.length; a++) {
+      final friend = friends[a];
+      try {
+        if (friend != null) {
+          friend.populateChats(provide);
+        }
+      } catch (e, a) {
+        continue;
+      }
+    }
+    print(friends == null ? "Erre Lash They are null " : friends.length);
+    return friends;
   }
 }
