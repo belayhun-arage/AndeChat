@@ -26,6 +26,7 @@ class FriendsState extends Cubit<List<Alie>> {
   void fetchMyAlies() async {
     final friends = await repository.getMyFriends();
     if (friends != null) {
+      print("\n\n\n Emmiting ... \n\n\n\n");
       emit(friends);
     }
   }

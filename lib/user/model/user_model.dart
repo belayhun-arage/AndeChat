@@ -56,7 +56,6 @@ class Alie {
           user.myalies.add(theJson['my_alies'][a]);
         }
       }
-      if(theJson[""])
       if (theJson['my_groups'] != null) {
         for (int a = 0; a < theJson['my_groups'].length; a++) {
           user.mygroups.add(theJson['my_groups'][a]);
@@ -111,15 +110,17 @@ class Alie {
 
   static List<Alie> AllUsers(List<Map<String, dynamic>> allUsersJson) {
     print("$allUsersJson\n\n");
-    print( allUsersJson.runtimeType );
+    print(allUsersJson.runtimeType);
     List<Alie> users = [];
     for (var usr in allUsersJson) {
       print(usr);
       Alie newUser = Alie.fromJson(usr);
       print(newUser);
+      if (newUser == null) {
+        print("New User Is Null ");
+      }
       users.add(newUser);
     }
     return users;
   }
 }
-
