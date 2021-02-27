@@ -7,7 +7,7 @@ import 'package:web_socket_channel/io.dart';
 class WebSocketService {
   static WebSocketChannel _channel;
   static WebSocketService _service;
-  static const String WSHOST = 'ws://10.0.3.2:8080/chat/';
+  static const String WSHOST = 'ws://10.9.215.220:8080/chat/';
 
   //  List Of Blocs will be listed here .
   static UserCubit userState;
@@ -117,9 +117,8 @@ class WebSocketService {
   // sendEEMessage
   bool sendEEMessage(EEMessage message) {
     print("message written to the websocket");
-    
 
-    final xeemess = XEEMessage(status: 4, body: message );
+    final xeemess = XEEMessage(status: 4, body: message);
     print(jsonEncode(xeemess.toJson()));
     _channel.sink.add(jsonEncode(xeemess.toJson()));
   }
