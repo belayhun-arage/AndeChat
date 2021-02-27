@@ -35,7 +35,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
   String message = "";
   @override
   Widget build(BuildContext context) {
-    final userprov = BlocProvider.of<UserCubit>(context);
+    final userprov = BlocProvider.of<UserState>(context);
     return GestureDetector(
       onTap: () => Focus.of(context).dispose(),
       child: Container(

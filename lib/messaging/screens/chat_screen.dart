@@ -129,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
       final EEMessage mess = EEMessage(
         receiverID: widget.user.id,
         seen: false,
-        senderID: myid,
+        senderID: StaticDataStore.ID,
         sent: false,
         text: messageText,
       );
@@ -209,7 +209,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   child: ListView.builder(
                     reverse: true,
-                    itemCount: widget.user.messages.length,
+                    itemCount: widget.user.messages==null ? 0 : widget.user.messages.length,
                     padding: EdgeInsets.only(top: 15.0),
                     itemBuilder: (BuildContext context, int index) {
                       final EEMessage message = widget.user.messages[index];

@@ -26,9 +26,9 @@ class SearchResult extends StatelessWidget {
             topRight: Radius.circular(20),
           ),
           child: ListView.builder(
-            itemCount: searchResultUsers.length,
+            itemCount: StaticDataStore.searchResultUsers.length,
             itemBuilder: (context, index) {
-              final alie = searchResultUsers[index];
+              final alie = StaticDataStore.searchResultUsers[index];
               return GestureDetector(
                 onTap: () =>
                     Navigator.pushNamed(context, ChatScreen.Route, arguments: {

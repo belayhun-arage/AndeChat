@@ -4,6 +4,7 @@ import 'package:ChatUI/libs.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:async';
+
 /*
   Methods List 
 
@@ -16,26 +17,24 @@ import 'dart:async';
 
 */
 class UserDataProvider extends Service {
-  
   static Client client;
-  // Header Data Will be listed here ... 
+  // Header Data Will be listed here ...
   static UserDataProvider _handler;
   static SessionHandler _sessHandler;
   static HttpCallHandler httpCallHandler;
   static const String HOST = StaticDataStore.HOST;
 
   static Future<UserDataProvider> getInstance() async {
-    if (httpCallHandler == null) {
-      httpCallHandler = await HttpCallHandler.getInstance();
-      _sessHandler = await HttpCallHandler.sessionHandler;
-      client = httpCallHandler.client;
-    }
-    if (_sessHandler == null) {
-     _sessHandler = await HttpCallHandler.sessionHandler;
-    }
     if (_handler == null) {
       _handler = new UserDataProvider();
-      return _handler;
+      if (httpCallHandler == null) {
+        httpCallHandler = await HttpCallHandler.getInstance();
+        _sessHandler = await HttpCallHandler.sessionHandler;
+        client = httpCallHandler.client;
+      }
+      if (_sessHandler == null) {
+        _sessHandler = await HttpCallHandler.sessionHandler;
+      }
     }
     return _handler;
   }
@@ -123,6 +122,7 @@ class UserDataProvider extends Service {
   }
 
   Future<List<Alie>> getMyFriends() async {
+    print("------------------ Getting Your Friends --------------------");
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {
       headers = {};
@@ -134,15 +134,28 @@ class UserDataProvider extends Service {
     if (response != null && response.statusCode == 200) {
       try {
         var body = jsonDecode(response.body) as Map<String, dynamic>;
-        _sessHandler.updateCookie(response);
-        return Alie.AllUsers(body["alies"] );;
+        if (body["success"] as bool) {
+          _sessHandler.updateCookie(response);
+          print("\n\n\n\n  ${body['alies'].runtimeType} \n\n\n\n");
+          List<Map<String, dynamic>> friendsMap = List<Map<String, dynamic>>();
+          for (var a in body['alies']) {
+            print(a);
+            final singleFriendMap = a as Map<String, dynamic>;
+            if (singleFriendMap != null) {
+              friendsMap.add(singleFriendMap);
+            }
+          }
+          return Alie.AllUsers(friendsMap);
+        } else {
+          return [];
+        }
       } catch (e, a) {
         return null;
       }
     }
     return null;
   }
-  
+
   Future<List<Alie>> searchUsers(String username) async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {

@@ -11,7 +11,7 @@ class MainService {
   Alie get profile => theuser;
   static String filePath;
 
-  static UserCubit userState;
+  static UserState userState;
   static FriendsState firendsState;
   static InteractiveUser activeUser;
   static OnlineFriends onlineFriendsStates;
@@ -21,7 +21,7 @@ class MainService {
 
   static MainService getInstance() {
     if (userState == null) {
-      userState = UserCubit.instance;
+      userState = UserState.instance;
     }
     if (firendsState == null) {
       firendsState = FriendsState.getInstance();

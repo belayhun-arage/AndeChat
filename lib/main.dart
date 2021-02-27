@@ -5,25 +5,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   Bloc.observer = ValuesObserver();
-  runApp(MyApp(null));
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Alie user;
-  MyApp(@required this.user);
+  MyApp();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    instantiateSome();
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => FriendsState.getInstance(),
+          create: (_) {
+            return FriendsState.getInstance();
+          },
         ),
         BlocProvider(
-          create: (_) => UserCubit( repo: UserRepository() ),
+          create: (_) {
+            return UserState(repo: UserRepository());
+          },
         ), // FriendsBloc
         BlocProvider(
-          create: (_) => TabIndex(),
+          create: (_) {
+            return TabIndex();
+          },
         ),
         BlocProvider(
           create: (_) => OnlineFriends.instance,
@@ -69,5 +76,12 @@ class MyApp extends StatelessWidget {
         // home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
+  }
+
+  // caling the time taking methods so that they will be ready when we need them
+  instantiateSome() {
+    UserDataProvider.getInstance();
+    MessagingDataProvider.getInstance();
+    UpdateData.getInstance();
   }
 }

@@ -48,7 +48,7 @@ class RecentChats extends StatelessWidget {
             builder: (context, alies) {
 
               return ListView.builder(
-                itemCount: alies.length,
+                itemCount: alies!=null ? alies.length : 0 ,
                 itemBuilder: (context, index) {
                   final alie = alies[index];
                   return GestureDetector(

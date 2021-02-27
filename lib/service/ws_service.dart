@@ -10,7 +10,7 @@ class WebSocketService {
   static const String WSHOST = 'ws://10.9.215.220:8080/chat/';
 
   //  List Of Blocs will be listed here .
-  static UserCubit userState;
+  static UserState userState;
   static FriendsState firendsState;
   static InteractiveUser activeUser;
   static OnlineFriends onlineFriendsStates;
@@ -29,7 +29,7 @@ class WebSocketService {
       _sessionHandler = await HttpCallHandler.sessionHandler;
     }
     if (userState == null) {
-      userState = UserCubit.instance;
+      userState = UserState.instance;
     }
     if (firendsState == null) {
       firendsState = FriendsState.getInstance();
@@ -50,11 +50,17 @@ class WebSocketService {
       headers = await _sessionHandler.getHeader();
       _channel = new IOWebSocketChannel.connect(WSHOST, headers: headers);
       _channel.stream.listen((data) {
-        final message = data as Map<String, dynamic>;
-        print("Message From The Web Socket : $message");
-        switch (message['status']) {
+        // print("Message From The Web Socket : $data");
+
+        String message = utf8.decode(data);
+        // final message = data;
+        print("${data.runtimeType} $message");
+
+        Map<String, dynamic> jsonMessage = jsonDecode(message);
+        switch (WS_STATUS_CODE.values[jsonMessage["status"]]  ) {
           case WS_STATUS_CODE.EEMESSAGE:
             {
+              
               break;
             }
           case WS_STATUS_CODE.ACTIVE_FRIENDS:
@@ -97,6 +103,18 @@ class WebSocketService {
             {
               break;
             }
+          case WS_STATUS_CODE.UNKNOWN:
+            // TODO: Handle this case.
+            break;
+          case WS_STATUS_CODE.STOP_TYPING:
+            // TODO: Handle this case.
+            break;
+          case WS_STATUS_CODE.NEW_ALIE:
+            // TODO: Handle this case.
+            break;
+          case WS_STATUS_CODE.GROUP_PROFILE_CHANGE:
+            // TODO: Handle this case.
+            break;
         }
       }, onError: (mess) {}, cancelOnError: true);
     }
@@ -139,7 +157,5 @@ class WebSocketService {
   bool sendJoinLeavMessage(JoinLeaveMessage message) {
     _channel.sink.add(jsonEncode(message));
   }
-
   // bool
-
 }
