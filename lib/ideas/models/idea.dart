@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 class Idea extends Equatable {
-  final String id, title, description;
+  final String id, title, description, image;
   //final FileImage image;
   Alie owner;
 
@@ -11,7 +11,7 @@ class Idea extends Equatable {
   //   this.owner = await repo.getOwner(this.id);
   // }
 
-  Idea({this.id, this.title, this.description});
+  Idea({this.id, this.title, this.description, this.image});
   @override
   List<Object> get props => [id, title, description];
 
@@ -23,10 +23,10 @@ class Idea extends Equatable {
       return null;
     }
     return Idea(
-      id: json['id'],
-      title: json["title"],
-      description: json['description'],
-    );
+        id: json['id'],
+        title: json["title"],
+        description: json['description'],
+        image: json['image']);
   }
   @override
   String toString() =>

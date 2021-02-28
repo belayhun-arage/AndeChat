@@ -1,3 +1,4 @@
+import 'package:ChatUI/admin/admin.dart';
 import 'package:ChatUI/ideas/bloc/idea_bloc.dart';
 import 'package:ChatUI/ideas/bloc/idea_event.dart';
 import 'package:ChatUI/ideas/repository/idea_repository.dart';
@@ -81,6 +82,12 @@ class MyApp extends StatelessWidget {
           },
           ChangeProfile.RouteName: (context) {
             return ChangeProfile();
+          },
+          AdminLogin.Route: (context) {
+            return AdminLogin();
+          },
+          AdminPage.RouteName: (context) {
+            return AdminPage();
           }
         },
         // home: MyHomePage(title: 'Flutter Demo Home Page'),

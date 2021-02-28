@@ -35,6 +35,39 @@ class IdeaDataProvider {
     return _handler;
   }
 
+  // Future<Idea> createIdea(Idea idea) async {
+  //   print("Before heder ....");
+  //   Map<String, String> headers = await _sessHandler.getHeader();
+  //   print("_______ After Header ________ ");
+  //   print("this is session handler" + "$_sessHandler");
+  //   print("The Real header$headers");
+  //   if (headers == null) {
+  //     headers = {};
+  //   }
+  //   headers["Content-Type"] = "application/json";
+  //   print("${idea.title}, ${idea.description}");
+  //   final response = await client.post(
+  //     "${HOST}api/idea/new/json/",
+  //     body: jsonEncode(<String, dynamic>{
+  //       'title': idea.title,
+  //       'description': idea.description,
+  //     }),
+  //     headers: headers,
+  //   );
+  //   print("this is response body" + response.body);
+  //   if (response.statusCode == 200) {
+  //     var body = jsonDecode(response.body) as Map<String, dynamic>;
+  //     if (body["success"] as bool) {
+  //       print("mariyamye");
+  //       return Idea.fromJson(body["idea"]);
+  //     }
+  //     return null;
+  //   } else {
+  //     print("it worked");
+  //     throw Exception('Failed to create idea.');
+  //   }
+  // }
+
   Future<Idea> createIdea(Idea idea) async {
     print("Before heder ....");
     Map<String, String> headers = await _sessHandler.getHeader();
@@ -46,14 +79,17 @@ class IdeaDataProvider {
     }
     headers["Content-Type"] = "application/json";
     print("${idea.title}, ${idea.description}");
-    final response = await client.post(
-      "${HOST}api/idea/new/json/",
-      body: jsonEncode(<String, dynamic>{
-        'title': idea.title,
-        'description': idea.description,
-      }),
+    var map = new Map<String, dynamic>();
+    map['title'] = idea.title;
+    map['description'] = idea.description;
+    map['image'] = idea.image;
+
+    http.Response response = await http.post(
+      "${HOST}api/idea/new/",
+      body: map,
       headers: headers,
     );
+
     print("this is response body" + response.body);
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body) as Map<String, dynamic>;
