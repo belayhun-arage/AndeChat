@@ -189,4 +189,9 @@ class UserDataProvider extends Service {
     }
     return null;
   }
+
+
+  Future<bool >  logout(){
+    
+  }
 }

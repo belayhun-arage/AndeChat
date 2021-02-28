@@ -16,16 +16,28 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
       try {
         await idearepository.createIdea(event.idea);
 
-        final ideas = await idearepository.getideas();
+        final ideas = await idearepository.getideas(StaticDataStore.ID);
         yield IdeaLoadSuccess(ideas);
       } catch (_) {
         yield IdeaOperationFailure();
       }
     }
+
+    if (event is IdeaLoadMoney) {
+      // yield IdeaLoading();
+      try {
+        final ideas = await idearepository.getideasMoney();
+
+        yield IdeaLoadSuccess(ideas);
+      } catch (_) {
+        yield IdeaOperationFailure();
+      }
+    }
+
     if (event is IdeaLoad) {
       // yield IdeaLoading();
       try {
-        final ideas = await idearepository.getideas();
+        final ideas = await idearepository.getideas(StaticDataStore.ID);
 
         yield IdeaLoadSuccess(ideas);
       } catch (_) {
@@ -38,7 +50,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
         // print("ellllllllllllllelllllll");
         await idearepository.updateIdea(event.idea);
         print("ellllllllllllllelllllll");
-        final ideas = await idearepository.getideas();
+        final ideas = await idearepository.getideas(StaticDataStore.ID);
         yield IdeaLoadSuccess(ideas);
       } catch (_) {
         yield IdeaOperationFailure();
@@ -51,7 +63,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
         await idearepository.deleteIdea(event.idea.id);
 
         print("beka litegna new" + event.idea.id);
-        final ideas = await idearepository.getideas();
+        final ideas = await idearepository.getideas(StaticDataStore.ID);
         yield IdeaLoadSuccess(ideas);
       } catch (_) {
         yield IdeaOperationFailure();
@@ -63,7 +75,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
 
   Stream<IdeaState> getMyIdeas() async* {
     try {
-      final ideas = await idearepository.getideas();
+      final ideas = await idearepository.getideas(StaticDataStore.ID);
       print(ideas);
       yield IdeaLoadSuccess(ideas);
     } catch (_) {

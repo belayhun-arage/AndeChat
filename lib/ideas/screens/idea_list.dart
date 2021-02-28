@@ -65,10 +65,12 @@ class IdeaList extends StatelessWidget {
                               SizedBox(
                                 width: 20,
                               ),
-                              Text(
-                                "Mekdes Genetu",
-                                style: TextStyle(fontSize: 16.0),
-                              ),
+                              BlocBuilder<UserState, Alie>(builder: (_, me) {
+                                return Text(
+                                  me.username,
+                                  style: TextStyle(fontSize: 16.0),
+                                );
+                              }),
                             ],
                           ),
                         ),

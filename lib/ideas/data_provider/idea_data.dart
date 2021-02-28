@@ -66,33 +66,39 @@ class IdeaDataProvider {
       print("it worked");
       throw Exception('Failed to create idea.');
     }
-
-    // print("i am here");
-    // final response = await http.post(
-    //   url,
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, dynamic>{
-    //     'id': idea.id,
-    //     'title': idea.title,
-    //     'description': idea.description,
-    //   }),
-    // );
-    // print("this is response body" + response.body);
-    // if (response.statusCode == 200) {
-    //   var body = jsonDecode(response.body) as Map<String, dynamic>;
-    //   //   if (body["success"] as bool) {
-    //   print("mariyamye");
-    //   return Idea.fromJson(jsonDecode(response.body));
-    //   //return Idea.fromJson(body["idea"]);
-    // } else {
-    //   print("it worked");
-    //   throw Exception('Failed to create idea.');
-    // }
   }
 
-  Future<List<Idea>> getIdeas() async {
+  Future<List<Idea>> getIdeas(String userid) async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
+    var response = await http.get(
+      "$HOST/api/user/ideas/?userid=$userid",
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      final ideas = jsonDecode(response.body) as Map<String, dynamic>;
+      List<Idea> ideass = [];
+      int a = 0;
+      print(ideas);
+      while (a < ideas['ideas'].length) {
+        final ide = ideas['ideas'][a];
+        final idea = Idea.fromJson(ide);
+        if (idea != null) {
+          ideass.add(idea);
+        }
+        a++;
+      }
+      print("  some thing ${ideass.length}");
+      return ideass;
+    } else {
+      print("i am just expecting");
+      throw Exception("failed to load ideas");
+    }
+  }
+
+  Future<List<Idea>> getIdeasMoney() async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {
       headers = {};

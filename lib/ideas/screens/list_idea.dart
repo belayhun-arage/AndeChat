@@ -18,7 +18,7 @@ class _ListIdeaState extends State<ListIdea> {
   @override
   void initState() {
     super.initState();
-    futureAlbum = IdeaDataProvider().getIdeas();
+    // futureAlbum = IdeaDataProvider().getIdeas();
   }
 
   @override

@@ -79,6 +79,9 @@ class MyApp extends StatelessWidget {
           AuthScreen.Route: (context) {
             return AuthScreen();
           },
+          ChangeProfile.RouteName: (context) {
+            return ChangeProfile();
+          }
         },
         // home: MyHomePage(title: 'Flutter Demo Home Page'),
         onGenerateRoute: CourseAppRoute.generateRoute,

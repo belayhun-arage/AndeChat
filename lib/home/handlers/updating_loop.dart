@@ -101,11 +101,12 @@ class UpdateData {
           userState = UserState.instance;
         }
         await StaticDataStore.userState.getMyProfile();
-        
+
         if (StaticDataStore.userState.state == null) {
           return;
         }
-        if (StaticDataStore.userState.state.imageUrl != '' && StaticDataStore.userState.state.imageUrl.split('/').length > 0) {
+        if (StaticDataStore.userState.state.imageUrl != '' &&
+            StaticDataStore.userState.state.imageUrl.split('/').length > 0) {
           await downloadImage(StaticDataStore.userState.state);
         }
         StaticDataStore.ID = StaticDataStore.userState.state.id;
@@ -191,4 +192,6 @@ class UpdateData {
     }
     onSyncSearchController.add(false);
   }
+
+  void webSocketConnectionHandler() {}
 }

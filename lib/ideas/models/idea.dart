@@ -1,9 +1,15 @@
+import 'package:ChatUI/libs.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 class Idea extends Equatable {
   final String id, title, description;
   //final FileImage image;
+  Alie owner;
+
+  // void getOwner(IdeaDataProvider repo) async {
+  //   this.owner = await repo.getOwner(this.id);
+  // }
 
   Idea({this.id, this.title, this.description});
   @override

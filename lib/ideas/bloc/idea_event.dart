@@ -6,6 +6,14 @@ abstract class IdeaEvent extends Equatable {
   const IdeaEvent();
 }
 
+class IdeaLoadMoney extends IdeaEvent {
+  const IdeaLoadMoney();
+
+  @override
+  @override
+  List<Object> get props => [];
+}
+
 class IdeaLoad extends IdeaEvent {
   const IdeaLoad();
 

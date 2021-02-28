@@ -14,8 +14,12 @@ class Idearepository {
     return await provider.createIdea(idea);
   }
 
-  Future<List<Idea>> getideas() async {
-    return await provider.getIdeas();
+  Future<List<Idea>> getideasMoney() async {
+    return await provider.getIdeasMoney();
+  }
+
+  Future<List<Idea>> getideas(String userid) async {
+    return await provider.getIdeas(userid);
   }
 
   Future<void> updateIdea(Idea idea) async {

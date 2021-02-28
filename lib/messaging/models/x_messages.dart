@@ -3,23 +3,23 @@
 */
 import 'package:ChatUI/libs.dart';
 
-enum WS_STATUS_CODE {
-  UNKNOWN,
-  SEEN,
-  TYPING,
-  STOP_TYPING,
-  EEMESSAGE,
-  GMESSAGE,
-  ALIE_PROFILE_CHANGE,
-  NEW_ALIE,
-  GROUP_PROFILE_CHANGE,
-  GROUP_JOIN,
-  GROUP_LEAVE,
-  //this is to be implemented later
-  // we did not include this functionality in
-  //this project round .
-  DELETE_USER,
-  ACTIVE_FRIENDS,
+class WS_STATUS_CODE {
+  static const int UNKNOWN=0,
+      SEEN=1,
+      TYPING=2,
+      STOP_TYPING=3,
+      EEMESSAGE=4,
+      GMESSAGE=5,
+      ALIE_PROFILE_CHANGE=6,
+      NEW_ALIE=7,
+      GROUP_PROFILE_CHANGE=8,
+      GROUP_JOIN=9,
+      GROUP_LEAVE=10,
+      //this is to be implemented later
+      // we did not include this functionality in
+      //this project round .
+      DELETE_USER=11,
+      ACTIVE_FRIENDS = 12;
 }
 
 /// class representing seen message body
@@ -30,7 +30,7 @@ class SeenBody {
   String senderID;
   String observerID;
 
-  SeenBody({this.messageNumber  ,this.senderID  , this.observerID });
+  SeenBody({this.messageNumber, this.senderID, this.observerID});
 
   Map<String, dynamic> toJson() {
     return {
