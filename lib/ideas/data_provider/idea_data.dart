@@ -47,7 +47,7 @@ class IdeaDataProvider {
     headers["Content-Type"] = "application/json";
     print("${idea.title}, ${idea.description}");
     final response = await client.post(
-      "${HOST}api/idea/new/",
+      "${HOST}api/idea/new/json/",
       body: jsonEncode(<String, dynamic>{
         'title': idea.title,
         'description': idea.description,
@@ -101,25 +101,14 @@ class IdeaDataProvider {
       "$HOST/api/ideas/",
       headers: headers,
     );
-    print("The Response In The Idea Page : ${response.body}");
-    // if (response == null) {
-    //   print("hello");
-    //   return null;
-    // }
     if (response.statusCode == 200) {
-      // var body = jsonDecode(response.body) as Map<String, dynamic>;
-      //if (body["success"] as bool) {
       final ideas = jsonDecode(response.body) as Map<String, dynamic>;
-      // return ideas as List<Idea>;
       List<Idea> ideass = [];
       int a = 0;
       print(ideas);
       while (a < ideas['ideas'].length) {
         final ide = ideas['ideas'][a];
-        print("samiiii  $ide");
         final idea = Idea.fromJson(ide);
-
-        print("mekkdiii $idea ");
         if (idea != null) {
           ideass.add(idea);
         }
@@ -127,33 +116,26 @@ class IdeaDataProvider {
       }
       print(ideass.length);
       return ideass;
-      // returnList ideas.map((idea) => Idea.fromJson(idea)).toList();
-      // }
-      //  return null;
-
-      // var body = jsonDecode(response.body) as Map<String, dynamic>;
-      // print(body);
-      // _sessHandler.updateCookie(response);
-      // if (!(body['success'] as bool)) {
-      //   return null;
-      // }
-      // return Alie.fromJson(body["user"] as Map<String, dynamic>);
     } else {
       print("i am just expecting");
       throw Exception("failed to load ideas");
     }
   }
 
-  Future<void> deleteIdea(String _id) async {
+  Future<void> deleteIdea(String idea_id) async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
     print("this is deleting");
     final http.Response response = await http.delete(
-      '$host/idea/ideas/$_id',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      '$HOST/idea/$idea_id',
+      headers: headers,
     );
-    print("${response.body} ${response.statusCode}");
-    if (response.statusCode != 200) {
+    print("${response.body} MEKDI");
+    // print("is it working");
+    //print("${response.body} ${response.statusCode}");
+    if (response.statusCode != 301) {
       throw Exception('Failed to delete course.');
     }
   }
