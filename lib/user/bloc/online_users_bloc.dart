@@ -1,9 +1,8 @@
 import 'package:ChatUI/user/repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-/// OnlineFriends bloc holds the ID of online friends 
-/// this list of string(List of ID ) will be used 
+/// OnlineFriends bloc holds the ID of online friends
+/// this list of string(List of ID ) will be used
 /// in the Active users Tab in the home page to list active users.
 class OnlineFriends extends Cubit<List<String>> {
   UserRepository repository;
@@ -13,9 +12,18 @@ class OnlineFriends extends Cubit<List<String>> {
     _instance = this;
   }
   static OnlineFriends get instance {
+    if (_instance == null) {
+      _instance = OnlineFriends(UserRepository());
+    }
     return _instance;
   }
+
   void updateOnlineFriends(List<String> onlineFriends) async {
+    if (onlineFriends == null) {
+      print("   Not Updating ....   ");
+      return;
+    }
+    print("   Emiittedd   ");
     emit(onlineFriends);
-  }  
+  }
 }

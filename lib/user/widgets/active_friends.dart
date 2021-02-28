@@ -25,12 +25,22 @@ class ActiveChat extends StatelessWidget {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          child: BlocBuilder<FriendsState, List<Alie>>(
+          child: BlocBuilder<OnlineFriends, List<String>>(
             builder: (context, alies) {
               return ListView.builder(
                 itemCount: alies != null ? alies.length : 0,
                 itemBuilder: (context, index) {
-                  final alie = alies[index];
+                  Alie alie;
+                  final aliess = StaticDataStore.friendsState.state;
+                  for (Alie al in aliess) {
+                    if (al.id == alies[index]) {
+                      alie = al;
+                    }
+                  }
+                  if (alie == null) {
+                    return SizedBox();
+                  }
+
                   return GestureDetector(
                     onTap: () => Navigator.pushNamed(context, ChatScreen.Route,
                         arguments: {

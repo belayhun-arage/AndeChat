@@ -18,6 +18,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          create: (_) => OnlineFriends( UserRepository()),
+        ),
+        BlocProvider(
           create: (_) {
             return FriendsState.getInstance();
           },
@@ -32,9 +35,7 @@ class MyApp extends StatelessWidget {
             return TabIndex();
           },
         ),
-        BlocProvider(
-          create: (_) => OnlineFriends.instance,
-        ),
+        
       ],
 
 /*
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
 
 */
       child: MaterialApp(
-        title: 'Flutter Chat UI',
+        title: 'AndeChat',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,

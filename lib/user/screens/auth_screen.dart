@@ -41,6 +41,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     
+    // StaticDataStore
     return Scaffold(
       appBar: AppBar(
         actions: [],

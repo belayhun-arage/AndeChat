@@ -1,5 +1,6 @@
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AdminScreen extends StatefulWidget {
   static const String Route = "/admin";
@@ -18,7 +19,7 @@ class _AdminScreenState extends State<AdminScreen> {
     setState(() {
       authentications = [
         AuthLogin(
-          function :setAuthorization ,
+          function: setAuthorization,
         ),
         AuthRegistration(
           function: setAuthorization,
@@ -26,7 +27,6 @@ class _AdminScreenState extends State<AdminScreen> {
       ];
     });
     super.initState();
-
   }
 
   setAuthorization(int val) {
@@ -37,14 +37,12 @@ class _AdminScreenState extends State<AdminScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
+    StaticDataStore.onlineFriends = BlocProvider.of<OnlineFriends>(context);
     return Scaffold(
       appBar: AppBar(
         actions: [],
-
         elevation: 0,
         centerTitle: true,
       ),

@@ -57,15 +57,17 @@ class MainService {
   Stream<bool> get onSync => onSyncController.stream;
   Stream<bool> get onSyncSearch => onSyncSearchController.stream;
 
+  bool running = false;
   void webSocketConnectionHandler() async {
     while (true) {
+      running = true;
       await Future.delayed(Duration(seconds: 2), () {
         // This Code Will Run Every 2 second to check the status of the websocket connections
         if (webSocketService.channel == null ||
             webSocketService.channel.closeCode == 1008 ||
-            webSocketService.channel.closeCode == 1006
-            ) {
-          print("\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n    Called ------\n\n\n\n\n\n\n\n\n\n\n");
+            webSocketService.channel.closeCode == 1006) {
+          print(
+              "\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n    Called ------\n\n\n\n\n\n\n\n\n\n\n");
           WebSocketService.getInstance().then((wshand) {
             // print("Instantiating the WebSocket Class ");
             webSocketService = wshand;
