@@ -91,11 +91,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (StaticDataStore.friendsState == null) {
-      print("Instantiating the firendsState Bloc ");
-      StaticDataStore.friendsState = context.read<FriendsState>();
-    }
-    StaticDataStore.friendsState.fetchMyAlies();
+    // if (StaticDataStore.friendsState == null) {
+    //   print("Instantiating the firendsState Bloc ");
+    //   StaticDataStore.friendsState = context.read<FriendsState>();
+    // }
+    // StaticDataStore.friendsState.fetchMyAlies();
+    final ideaBloc = BlocProvider.of<IdeaBloc>(context);
+    ideaBloc.add(IdeaLoad());
     print(this.filesPath);
     return Scaffold(
       backgroundColor:
@@ -183,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     case 0:
                       {
                         return Expanded(
-                          child: Container(color: Colors.blue),
+                          child: IdeaList(),
                         );
                       }
                     case 1:

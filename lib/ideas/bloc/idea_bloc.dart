@@ -1,5 +1,4 @@
-import 'package:ChatUI/ideas/bloc/bloc.dart';
-import 'package:ChatUI/ideas/repository/repository.dart';
+import 'package:ChatUI/libs.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
   final Idearepository idearepository;
 
-  IdeaBloc({@required this.idearepository, Idearepository courseRepository})
+  IdeaBloc({@required this.idearepository})
       : assert(idearepository != null),
         super(IdeaLoading());
 
@@ -16,6 +15,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
     if (event is IdeaCreate) {
       try {
         await idearepository.createIdea(event.idea);
+
         final ideas = await idearepository.getideas();
         yield IdeaLoadSuccess(ideas);
       } catch (_) {
@@ -23,7 +23,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
       }
     }
     if (event is IdeaLoad) {
-      yield IdeaLoading();
+      // yield IdeaLoading();
       try {
         final ideas = await idearepository.getideas();
 

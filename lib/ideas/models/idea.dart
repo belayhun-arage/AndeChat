@@ -13,8 +13,11 @@ class Idea extends Equatable {
   // List<Object> get ideas => [title, description];
 
   factory Idea.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      return null;
+    }
     return Idea(
-      id: json['_id'],
+      id: json['id'],
       title: json["title"],
       description: json['description'],
     );

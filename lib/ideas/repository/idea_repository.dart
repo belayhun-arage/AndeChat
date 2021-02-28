@@ -2,9 +2,13 @@ import 'package:ChatUI/ideas/data_provider/data_provider.dart';
 import 'package:ChatUI/ideas/models/models.dart';
 
 class Idearepository {
-  final IdeaDataProvider provider;
+  IdeaDataProvider provider;
 
-  Idearepository({this.provider}) : assert(IdeaDataProvider != null);
+  Idearepository() : assert(IdeaDataProvider != null) {
+    IdeaDataProvider.getInstance().then((value) {
+      this.provider = value;
+    });
+  }
 
   Future<Idea> createIdea(Idea idea) async {
     return await provider.createIdea(idea);

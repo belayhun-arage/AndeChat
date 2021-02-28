@@ -171,7 +171,9 @@ class _CreateIdeaState extends State<CreateIdea> {
                               description: this._idea["description"],
                             ),
                           );
+                    // print((event as IdeaCreate).idea);
                     BlocProvider.of<IdeaBloc>(context).add(event);
+                    print("lik mike");
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         IdeaList.routeName, (route) => false);
                   }

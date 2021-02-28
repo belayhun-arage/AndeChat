@@ -1,6 +1,7 @@
 import 'package:ChatUI/ideas/bloc/idea_bloc.dart';
 import 'package:ChatUI/ideas/bloc/idea_event.dart';
 import 'package:ChatUI/ideas/repository/idea_repository.dart';
+import 'package:ChatUI/ideas/screens/idea_rout.dart';
 import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/user/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
           create: (_) => OnlineFriends.instance,
         ),
         BlocProvider(create: (_) {
-          return IdeaBloc(idearepository: Idearepository())..add(IdeaLoad());
+          return IdeaBloc(idearepository: Idearepository());
         })
       ],
 
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
           },
         },
         // home: MyHomePage(title: 'Flutter Demo Home Page'),
+        onGenerateRoute: CourseAppRoute.generateRoute,
       ),
     );
   }
