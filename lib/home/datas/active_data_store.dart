@@ -5,7 +5,8 @@ List<Alie> searchResultUsers = [];
 String myid = '';
 
 class StaticDataStore {
-  static const String HOST = "http://10.0.3.2:8080/";
+  static const String HOST = "http://192.168.59.1:8080/";
+ //static const String HOST = "http://10.9.216.182:8080/";
   static String ID = "";
 }
 
