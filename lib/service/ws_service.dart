@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:ChatUI/libs.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -17,7 +18,7 @@ class WebSocketService {
   static MessagingDataProvider messagingDataProvider;
 
   // WebSocketService();
-  get channel {
+  WebSocketChannel get channel {
     return _channel;
   }
 
@@ -46,76 +47,105 @@ class WebSocketService {
       });
     }
 
-    if (_channel == null) {
+    if (_channel == null ||
+        _channel.closeCode == 1008 ||
+        _channel.closeCode == 1006 ||
+        _channel.closeCode == WebSocketStatus.ABNORMAL_CLOSURE
+        ) {
       headers = await _sessionHandler.getHeader();
       _channel = new IOWebSocketChannel.connect(WSHOST, headers: headers);
+      print(headers);
       _channel.stream.listen((data) {
-        // print("Message From The Web Socket : $data");
+        print("In data ... .................................................");
+        // final jsonMessage = json.decode(data.toString());
+        // print(jsonMessage.runtimeType);
+        // print(jsonMessage.runtimeType);
+        // switch (jsonMessage['status']) {
+        //   case WS_STATUS_CODE.EEMESSAGE:
+        //     {
+        //       print("----------------------------");
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.ACTIVE_FRIENDS:
+        //     {
+        //       print("messsss");
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.ALIE_PROFILE_CHANGE:
+        //     {
+        //       print("----------------------------");
 
-        String message = utf8.decode(data);
-        // final message = data;
-        print("${data.runtimeType} $message");
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.DELETE_USER:
+        //     {
+        //       print("----------------------------");
 
-        Map<String, dynamic> jsonMessage = jsonDecode(message);
-        switch (WS_STATUS_CODE.values[jsonMessage["status"]]  ) {
-          case WS_STATUS_CODE.EEMESSAGE:
-            {
-              
-              break;
-            }
-          case WS_STATUS_CODE.ACTIVE_FRIENDS:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.ALIE_PROFILE_CHANGE:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.DELETE_USER:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.GMESSAGE:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.ALIE_PROFILE_CHANGE:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.SEEN:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.SEEN:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.TYPING:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.GROUP_JOIN:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.GROUP_LEAVE:
-            {
-              break;
-            }
-          case WS_STATUS_CODE.UNKNOWN:
-            // TODO: Handle this case.
-            break;
-          case WS_STATUS_CODE.STOP_TYPING:
-            // TODO: Handle this case.
-            break;
-          case WS_STATUS_CODE.NEW_ALIE:
-            // TODO: Handle this case.
-            break;
-          case WS_STATUS_CODE.GROUP_PROFILE_CHANGE:
-            // TODO: Handle this case.
-            break;
-        }
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.GMESSAGE:
+        //     {
+        //       print("----------------------------");
+
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.ALIE_PROFILE_CHANGE:
+        //     {
+        //       print("----------------------------");
+
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.SEEN:
+        //     {
+        //       print("----------------------------");
+
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.SEEN:
+        //     {
+        //       print("----------------------------");
+
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.TYPING:
+        //     {
+        //       print("----------------------------");
+
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.GROUP_JOIN:
+        //     {
+        //       print("----------------------------");
+
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.GROUP_LEAVE:
+        //     {
+        //       print("----------------------------");
+
+        //       break;
+        //     }
+        //   case WS_STATUS_CODE.UNKNOWN:
+        //     // TODO: Handle this case.
+        //     print("----------------------------");
+
+        //     break;
+        //   case WS_STATUS_CODE.STOP_TYPING:
+        //     // TODO: Handle this case.
+        //     print("----------------------------");
+
+        //     break;
+        //   case WS_STATUS_CODE.NEW_ALIE:
+        //     // TODO: Handle this case.
+        //     print("----------------------------");
+
+        //     break;
+        //   case WS_STATUS_CODE.GROUP_PROFILE_CHANGE:
+        //     // TODO: Handle this case.
+        //     print("----------------------------");
+
+        //     break;
+        // }
       }, onError: (mess) {}, cancelOnError: true);
     }
     if (_service == null) {

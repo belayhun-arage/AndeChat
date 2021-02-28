@@ -9,7 +9,7 @@ class FriendsState extends Cubit<List<Alie>> {
     this.repository = repository;
     _instance = this;
   }
-
+  
   static FriendsState getInstance() {
     if (_instance == null) {
       _instance = FriendsState(UserRepository());
@@ -26,7 +26,6 @@ class FriendsState extends Cubit<List<Alie>> {
   void fetchMyAlies() async {
     final friends = await repository.getMyFriends();
     if (friends != null) {
-      print("\n\n\n Emmiting ... \n\n\n\n");
       emit(friends);
     }
   }

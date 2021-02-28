@@ -1,14 +1,13 @@
 import 'dart:io';
-
 import 'package:ChatUI/libs.dart';
-// import 'package:ChatUI/models/message_model.dart';
-// import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RecentChats extends StatelessWidget {
+/// ActiveChat active friends widget in a list of users which represents
+/// your friends which are online
+class ActiveChat extends StatelessWidget {
   final String filesPath;
-  RecentChats({Key key, this.filesPath}) : super(key: key);
+  ActiveChat({Key key, this.filesPath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +25,10 @@ class RecentChats extends StatelessWidget {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          child: BlocBuilder<FriendsState, List<Alie> >(
+          child: BlocBuilder<FriendsState, List<Alie>>(
             builder: (context, alies) {
-
               return ListView.builder(
-                itemCount: alies!=null ? alies.length : 0 ,
+                itemCount: alies != null ? alies.length : 0,
                 itemBuilder: (context, index) {
                   final alie = alies[index];
                   return GestureDetector(
@@ -61,21 +59,32 @@ class RecentChats extends StatelessWidget {
                               SizedBox(
                                 height: 80,
                                 width: 80,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(80),
-                                  child: alie.imageUrl == ""
-                                      ? Image.asset(alie.imageUrl == ""
-                                          ? "assets/images/greg.jpg"
-                                          : alie.imageUrl)
-                                      : Image.file(
-                                          File(
-                                              '$filesPath${(alie.imageUrl.split('/')[(alie.imageUrl.split('/').length - 1)])}'),
-                                          height: 150,
-                                          width: 180,
-                                        ),
-                                  // AssetImage(
-                                  //   chat.sender.imageUrl,
-                                  // ),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(80),
+                                      child: alie.imageUrl == ""
+                                          ? Image.asset(alie.imageUrl == ""
+                                              ? "assets/images/greg.jpg"
+                                              : alie.imageUrl)
+                                          : Image.file(
+                                              File(
+                                                  '$filesPath${(alie.imageUrl.split('/')[(alie.imageUrl.split('/').length - 1)])}'),
+                                              height: 150,
+                                              width: 180,
+                                            ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        top: 60,
+                                        left: 60,
+                                      ),
+                                      child: Icon(
+                                        Icons.circle,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               SizedBox(

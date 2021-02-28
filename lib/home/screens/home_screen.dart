@@ -32,6 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    // Initializing the Loop to connect to  a websocket service .
+    MainService.getInstance().then((mss) {
+      mss.startService();
+    });
+
     searchEntryIsVisible = false;
     searching = false;
     searchController = new TextEditingController();
@@ -91,8 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    MainService.getInstance().then((mss) {
+      mss.startService();
+    });
+
     if (StaticDataStore.friendsState == null) {
-      print("Instantiating the firendsState Bloc ");
       StaticDataStore.friendsState = context.read<FriendsState>();
     }
     StaticDataStore.friendsState.fetchMyAlies();
@@ -197,9 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     case 2:
                       {
-                        return Expanded(
-                          child: Container(color: Colors.green),
-                        );
+                        return ActiveChat();
                       }
                     case 3:
                       {
