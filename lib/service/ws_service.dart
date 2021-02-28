@@ -57,8 +57,8 @@ class WebSocketService {
       print(headers);
       _channel.stream.listen((data) {
         print("In data ... .................................................");
-        // final jsonMessage = json.decode(data.toString());
-        // print(jsonMessage.runtimeType);
+        final jsonMessage = json.decode(data.toString());
+        print(jsonMessage.runtimeType);
         // print(jsonMessage.runtimeType);
         // switch (jsonMessage['status']) {
         //   case WS_STATUS_CODE.EEMESSAGE:

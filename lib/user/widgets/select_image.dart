@@ -67,7 +67,8 @@ Future<File> pickImage(BuildContext context) async {
         )),
       );
     },
-    barrierDismissible: false,
+    barrierDismissible: true,
+    useSafeArea: true , 
   );
   if (image == null) {
     print(" The Image Is Null ");

@@ -31,6 +31,7 @@ class _MyNavigationState extends State<MyNavigation> {
     "Setting",
     "Theme",
     "About Us",
+    "Logout"
     
     // "New Account",
   ];
@@ -40,6 +41,7 @@ class _MyNavigationState extends State<MyNavigation> {
     "Setting": [Icons.settings, "/"],
     "Theme": [Icons.theater_comedy, "/"],
     "About Us": [Icons.group_work_sharp, "/"],
+    "Logout" : [Icons.logout  , "/"] , 
     // "Add Contact": [Icons.person_add, ""],
     
   };
