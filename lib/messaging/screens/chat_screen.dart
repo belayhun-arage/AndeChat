@@ -1,5 +1,7 @@
 import 'package:ChatUI/libs.dart';
+import 'package:ChatUI/messaging/widgets/message_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String Route = "/chat";
@@ -24,8 +26,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     super.initState();
   }
-
-  
 
   void _sendMessage() {
     final String timeValue =
@@ -73,6 +73,10 @@ class _ChatScreenState extends State<ChatScreen> {
           as Map<String, Object>)['user'] as Alie;
     }
     messageso = messages;
+
+    // passing the alie to the interacting alie bloc
+    InteractiveUser intuser = BlocProvider.of<InteractiveUser>(context);
+    intuser.updateActiveUserMessages(widget.user);
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -116,12 +120,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   child: ListView.builder(
                     reverse: true,
-                    itemCount: widget.user.messages==null ? 0 : widget.user.messages.length,
+                    itemCount: widget.user.messages == null
+                        ? 0
+                        : widget.user.messages.length,
                     padding: EdgeInsets.only(top: 15.0),
                     itemBuilder: (BuildContext context, int index) {
                       final EEMessage message = widget.user.messages[index];
                       final bool isMe = message.senderID == StaticDataStore.ID;
-                      return _buildMessage(message, isMe);
+                      return MessageItem(message, isMe);
                     },
                   ),
                 ),

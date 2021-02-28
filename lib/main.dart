@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => OnlineFriends( UserRepository()),
+          create: (_) => OnlineFriends(UserRepository()),
         ),
         BlocProvider(
           create: (_) {
@@ -35,7 +35,12 @@ class MyApp extends StatelessWidget {
             return TabIndex();
           },
         ),
-        
+        BlocProvider(
+          create: (_) => InteractiveUser(
+            UserRepository(),
+            ChatRepository(),
+          ),
+        ),
       ],
 
 /*

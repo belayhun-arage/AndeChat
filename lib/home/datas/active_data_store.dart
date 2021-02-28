@@ -13,6 +13,7 @@ class StaticDataStore {
   static FriendsState friendsState;
   static OnlineFriends onlineFriends;
   static List<Alie> searchResultUsers = [];
+  static InteractiveUser interactingUser;
 }
 
 enum WS_CONNECTION_STATUS {

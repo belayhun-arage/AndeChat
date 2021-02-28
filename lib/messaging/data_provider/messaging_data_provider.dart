@@ -20,7 +20,7 @@ class MessagingDataProvider extends Service {
       client = httpCallHandler.client;
     }
     if (_sessHandler == null) {
-     _sessHandler = await HttpCallHandler.sessionHandler;
+      _sessHandler = await HttpCallHandler.sessionHandler;
     }
     if (_handler == null) {
       _handler = new MessagingDataProvider();
@@ -28,6 +28,30 @@ class MessagingDataProvider extends Service {
     }
     return _handler;
   }
+
+  ///  deleteMessage a method to delete from a list of messages
+  Future<bool> deleteMessage(String friendID, int messageNumber) async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
+    headers["Context-Type"] = "application/json ";
+    var response = await client.delete(
+      "${HOST}api/message/?friend_id=$friendID&message_no=$messageNumber",
+      headers: headers,
+    );
+    if (response != null && response.statusCode == 200) {
+      try {
+        var body = jsonDecode(response.body) as Map<String, dynamic>;
+        _sessHandler.updateCookie(response);
+        return body["success"] as bool;
+      } catch (e, a) {
+        return false;
+      }
+    }
+    return false;
+  }
+
   Future<Uint8List> getImage(String imageurl) async {
     var response = await client.get("${HOST}$imageurl");
     if (response != null) {
@@ -88,7 +112,6 @@ class MessagingDataProvider extends Service {
           final messages = EEMessage.allMessagesFromJson(vals);
           return messages;
         } else {
-
           return [];
         }
       } catch (e, a) {

@@ -19,6 +19,7 @@ class ChangeProfile extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(30, 50, 30, 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  
                   children: <Widget>[
                     Container(
                       height: 30,

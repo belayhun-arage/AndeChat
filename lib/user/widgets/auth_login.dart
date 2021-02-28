@@ -40,6 +40,7 @@ class _AuthLoginState extends State<AuthLogin> {
     // final prov = BlocProvider.of<UserCubit>(context);
 
     StaticDataStore.friendsState = context.read<FriendsState>();
+    StaticDataStore.interactingUser = context.read<InteractiveUser>();
     this.gcontext = context;
     if (emailController == null) {
       this.emailController = new TextEditingController();

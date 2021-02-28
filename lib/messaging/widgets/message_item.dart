@@ -1,14 +1,19 @@
+import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/messaging/models/message_model.dart';
+import 'package:ChatUI/messaging/widgets/message_option_pop_up.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// This class represents the a single Message item which is visible in the 
-/// chat screen between two friends  
+/// This class represents the a single Message item which is visible in the
+/// chat screen between two friends
 class MessageItem extends StatelessWidget {
   final EEMessage message;
   final bool isMe;
   MessageItem(this.message, this.isMe);
   @override
   Widget build(BuildContext context) {
+    UserState state = BlocProvider.of<UserState>(context);
+
     final messageBody = Container(
       width: MediaQuery.of(context).size.width * 0.65,
       padding: EdgeInsets.symmetric(
@@ -44,13 +49,31 @@ class MessageItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            message.time,
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                Time.fromString(message.time).showFullTime(),
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.more_horiz),
+                onPressed: () {
+                  // print("This is samua");
+                  ShowMessagePopup(
+                    context,
+                    state.state.id == message.receiverID
+                        ? message.senderID
+                        : message.receiverID,
+                    message.messageNumber,
+                  );
+                },
+              )
+            ],
           ),
           SizedBox(
             height: 10.0,

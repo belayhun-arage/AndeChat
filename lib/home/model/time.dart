@@ -63,4 +63,8 @@ class Time {
     // if()
     return "${this.year}/${this.month}/${this.day}";
   }
+
+  String showFullTime(){
+    return "${this.year}/${this.month}/${this.day} ${this.hour}:${this.minute}";
+  }
 }
