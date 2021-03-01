@@ -18,4 +18,7 @@ class AdminRepository {
     return await this.provider.AdminLogin(email, password);
   }
 
+  Future<List<Idea>> getideasMoney() async {
+    return await provider.getIdeasMoney();
+  }
 }

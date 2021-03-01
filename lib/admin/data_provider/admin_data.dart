@@ -188,4 +188,34 @@ class AdminDataProvider extends Service {
   }
 
   Future<bool> logout() {}
+
+  Future<List<Idea>> getIdeasMoney() async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
+    var response = await client.get(
+      "$HOST/api/ideas/",
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      final ideas = jsonDecode(response.body) as Map<String, dynamic>;
+      List<Idea> ideass = [];
+      int a = 0;
+      print(ideas);
+      while (a < ideas['ideas'].length) {
+        final ide = ideas['ideas'][a];
+        final idea = Idea.fromJson(ide);
+        if (idea != null) {
+          ideass.add(idea);
+        }
+        a++;
+      }
+      print(ideass.length);
+      return ideass;
+    } else {
+      print("i am just expecting");
+      throw Exception("failed to load ideas");
+    }
+  }
 }
