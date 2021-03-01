@@ -1,12 +1,13 @@
+import 'package:ChatUI/admin/admin.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatUI/libs.dart';
 
+///This class is the one that list ideas and delete ideas
 class IdeaFragment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
-        body: ListView.builder(
+      body: ListView.builder(
         //    itemCount: courses.length,
         itemBuilder: (_, idx) => DeletableIdea(),
       ),
