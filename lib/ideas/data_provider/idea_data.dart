@@ -8,6 +8,7 @@ import 'package:ChatUI/service/service.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
+//class IdeaDataProvider makes http connection with external api and provides row data to the repository
 class IdeaDataProvider {
   final host = 'http://192.168.43.202:3000';
   var url = "http://192.168.43.202:3000/idea/ideas";
@@ -34,40 +35,8 @@ class IdeaDataProvider {
     }
     return _handler;
   }
-
-  // Future<Idea> createIdea(Idea idea) async {
-  //   print("Before heder ....");
-  //   Map<String, String> headers = await _sessHandler.getHeader();
-  //   print("_______ After Header ________ ");
-  //   print("this is session handler" + "$_sessHandler");
-  //   print("The Real header$headers");
-  //   if (headers == null) {
-  //     headers = {};
-  //   }
-  //   headers["Content-Type"] = "application/json";
-  //   print("${idea.title}, ${idea.description}");
-  //   final response = await client.post(
-  //     "${HOST}api/idea/new/json/",
-  //     body: jsonEncode(<String, dynamic>{
-  //       'title': idea.title,
-  //       'description': idea.description,
-  //     }),
-  //     headers: headers,
-  //   );
-  //   print("this is response body" + response.body);
-  //   if (response.statusCode == 200) {
-  //     var body = jsonDecode(response.body) as Map<String, dynamic>;
-  //     if (body["success"] as bool) {
-  //       print("mariyamye");
-  //       return Idea.fromJson(body["idea"]);
-  //     }
-  //     return null;
-  //   } else {
-  //     print("it worked");
-  //     throw Exception('Failed to create idea.');
-  //   }
-  // }
-
+  
+//Crude createIdea posts new idea to the database
   Future<Idea> createIdea(Idea idea) async {
     print("Before heder ....");
     Map<String, String> headers = await _sessHandler.getHeader();
@@ -104,6 +73,7 @@ class IdeaDataProvider {
     }
   }
 
+  //Crude getIdeas fech all ideas posted by a particular user from the database
   Future<List<Idea>> getIdeas(String userid) async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {
@@ -134,6 +104,7 @@ class IdeaDataProvider {
     }
   }
 
+  //Crude getIdeasMoney load all ideas from the api
   Future<List<Idea>> getIdeasMoney() async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {
@@ -164,6 +135,7 @@ class IdeaDataProvider {
     }
   }
 
+  //Crude deleteIdea delete a particular idea in the database
   Future<void> deleteIdea(String idea_id) async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {
@@ -182,6 +154,7 @@ class IdeaDataProvider {
     }
   }
 
+  //Crude updateIdea update the content of a particular idea in the database
   Future<void> updateIdea(Idea idea) async {
     final http.Response response = await http.put(
       '$host/idea/ideas/${idea.id}',
