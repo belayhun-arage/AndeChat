@@ -3,6 +3,7 @@ import 'package:ChatUI/libs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+//Bloc IdeaBloc maps the user event with the corresponding new state
 class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
   final Idearepository idearepository;
 
