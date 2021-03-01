@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+///This class handle the code that create other Admins
 class AddAdminFragment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

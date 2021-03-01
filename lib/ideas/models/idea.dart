@@ -2,6 +2,7 @@ import 'package:ChatUI/libs.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
+//entity idea 
 class Idea extends Equatable {
   final String id, title, description, image;
   //final FileImage image;
@@ -18,6 +19,7 @@ class Idea extends Equatable {
   // @override
   // List<Object> get ideas => [title, description];
 
+  //Idea.fromJson return the idea entity from encoded json form of an idea
   factory Idea.fromJson(Map<String, dynamic> json) {
     if (json == null) {
       return null;

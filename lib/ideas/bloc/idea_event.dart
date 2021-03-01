@@ -2,6 +2,7 @@ import 'package:ChatUI/ideas/models/models.dart';
 
 import 'package:equatable/equatable.dart';
 
+//Equatable IdeaEvent helps to compare IdeaEvents
 abstract class IdeaEvent extends Equatable {
   const IdeaEvent();
 }
@@ -22,6 +23,7 @@ class IdeaLoad extends IdeaEvent {
   List<Object> get props => [];
 }
 
+//class IdeaCreate creats a new idea 
 class IdeaCreate extends IdeaEvent {
   final Idea idea;
 
@@ -33,6 +35,7 @@ class IdeaCreate extends IdeaEvent {
   String toString() => 'idea created {idea: $idea} ';
 }
 
+//class IdeaUpdate update the content of an idea from the list of ideas
 class IdeaUpdate extends IdeaEvent {
   final Idea idea;
 
@@ -42,9 +45,10 @@ class IdeaUpdate extends IdeaEvent {
   List<Object> get props => [idea];
 
   @override
-  String toString() => 'Course Updated {course: $idea}';
+  String toString() => 'Idea Updated {idea: $idea}';
 }
 
+//event IdeaDelete delete ideas that has no more important
 class IdeaDelete extends IdeaEvent {
   final Idea idea;
 
@@ -54,5 +58,5 @@ class IdeaDelete extends IdeaEvent {
   List<Object> get props => [idea];
 
   @override
-  toString() => 'Course Deleted {course: $idea}';
+  toString() => 'Idea Deleted {idea: $idea}';
 }
