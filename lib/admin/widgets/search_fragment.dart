@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+///This class gives the privilege to the admin to search and delete users
 class SearchFragment extends StatelessWidget {
   bool isLoading = false;
   bool searchEntryIsVisible = true;
