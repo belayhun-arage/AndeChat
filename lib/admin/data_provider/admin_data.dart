@@ -118,41 +118,6 @@ class AdminDataProvider extends Service {
     return null;
   }
 
-  Future<List<Alie>> getMyFriends() async {
-    print("------------------ Getting Your Friends --------------------");
-    Map<String, String> headers = await _sessHandler.getHeader();
-    if (headers == null) {
-      headers = {};
-    }
-    var response = await client.get(
-      "${HOST}api/user/friends/",
-      headers: headers,
-    );
-    if (response != null && response.statusCode == 200) {
-      try {
-        var body = jsonDecode(response.body) as Map<String, dynamic>;
-        if (body["success"] as bool) {
-          _sessHandler.updateCookie(response);
-          print("\n\n\n\n  ${body['alies'].runtimeType} \n\n\n\n");
-          List<Map<String, dynamic>> friendsMap = List<Map<String, dynamic>>();
-          for (var a in body['alies']) {
-            print(a);
-            final singleFriendMap = a as Map<String, dynamic>;
-            if (singleFriendMap != null) {
-              friendsMap.add(singleFriendMap);
-            }
-          }
-          return Alie.AllUsers(friendsMap);
-        } else {
-          return [];
-        }
-      } catch (e, a) {
-        return null;
-      }
-    }
-    return null;
-  }
-
   Future<List<Alie>> searchUsers(String username) async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {
