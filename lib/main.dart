@@ -1,7 +1,9 @@
 import 'package:ChatUI/libs.dart';
-import 'package:ChatUI/user/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'admin/bloc/admin_state_bloc.dart';
+import 'ideas/screens/idea_rout.dart';
 
 void main() async {
   Bloc.observer = ValuesObserver();
@@ -40,6 +42,16 @@ class MyApp extends StatelessWidget {
             UserRepository(),
             ChatRepository(),
           ),
+        ),
+        BlocProvider(create: (_) {
+          return IdeaBloc(
+            idearepository: Idearepository(),
+          );
+        }),
+        BlocProvider(
+          create: (_) {
+            return AdminState( repo :AdminRepository() );
+          },
         ),
       ],
 
@@ -80,17 +92,25 @@ class MyApp extends StatelessWidget {
           },
           ChangeProfile.RouteName: (context) {
             return ChangeProfile();
+          },
+          AdminLogin.Route: (context) {
+            return AdminLogin();
+          },
+          AdminPage.RouteName: (context) {
+            return AdminPage();
           }
         },
         // home: MyHomePage(title: 'Flutter Demo Home Page'),
+        onGenerateRoute: CourseAppRoute.generateRoute,
       ),
     );
   }
 
-  // caling the time taking methods so that they will be ready when we need them
+  // caling the asynchrooniousto instantiate some datas methods so that they will be ready when we need them
   instantiateSome() {
     UserDataProvider.getInstance();
     MessagingDataProvider.getInstance();
     UpdateData.getInstance();
+    AdminDataProvider.getInstance();
   }
 }

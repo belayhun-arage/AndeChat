@@ -26,13 +26,13 @@ class _MyNavigationState extends State<MyNavigation> {
   }
 
   List<String> categories = [
-    "Profile", 
+    "Profile",
     "New Group",
     "Setting",
     "Theme",
     "About Us",
     "Logout"
-    
+
     // "New Account",
   ];
   Map<String, List<Object>> categoryList = {
@@ -41,13 +41,15 @@ class _MyNavigationState extends State<MyNavigation> {
     "Setting": [Icons.settings, "/"],
     "Theme": [Icons.theater_comedy, "/"],
     "About Us": [Icons.group_work_sharp, "/"],
-    "Logout" : [Icons.logout  , "/"] , 
+    "Logout": [Icons.logout, "/"],
     // "Add Contact": [Icons.person_add, ""],
-    
   };
 
   @override
   Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final ideaBloc = BlocProvider.of<IdeaBloc>(context);
+    ideaBloc.add(IdeaLoad());
     return Drawer(
       elevation: 1,
       child: Container(
@@ -67,17 +69,22 @@ class _MyNavigationState extends State<MyNavigation> {
                 children: [
                   BlocBuilder<UserState, Alie>(
                     builder: (context, user) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        child: (user.imageUrl == "" || user.imageUrl == null)
-                            ? Image.asset(
-                                "assets/images/greg.jpg",
-                              )
-                            : Image.file(
-                                File('${this.profileDir}'),
-                                height: 150,
-                                width: 180,
-                              ),
+                      return InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, IdeaList.routeName);
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          child: (user.imageUrl == "" || user.imageUrl == null)
+                              ? Image.asset(
+                                  "assets/images/greg.jpg",
+                                )
+                              : Image.file(
+                                  File('${this.profileDir}'),
+                                  height: 150,
+                                  width: 180,
+                                ),
+                        ),
                       );
                     },
                   ),
@@ -105,11 +112,11 @@ class _MyNavigationState extends State<MyNavigation> {
                   padding: EdgeInsets.all(3),
                   itemBuilder: (context, index) {
                     return ListTile(
-                      leading: Icon((categoryList[categories[index]])[0] ),
+                      leading: Icon((categoryList[categories[index]])[0]),
                       title: Text(categories[index]),
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                            (categoryList[categories[index]])[1]);
+                        Navigator.of(context)
+                            .pushNamed((categoryList[categories[index]])[1]);
                       },
                     );
                   },

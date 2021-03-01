@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AdminScreen extends StatefulWidget {
-  static const String Route = "/admin";
+  //static const String Route = "/admin";
   @override
   _AdminScreenState createState() => _AdminScreenState();
 }

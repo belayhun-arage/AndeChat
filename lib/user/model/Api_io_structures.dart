@@ -48,7 +48,7 @@ class LoginRes {
   factory LoginRes.fromJson(Map theJson) {
     try {
       return LoginRes(
-        success: theJson["success"]  as bool ,
+        success: theJson["success"] as bool,
         message: theJson["message"],
       );
     } catch (e, a) {

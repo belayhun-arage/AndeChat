@@ -1,11 +1,11 @@
+import 'package:ChatUI/admin/bloc/admin_state_bloc.dart';
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'admin_page.dart';
-
 class AdminLogin extends StatefulWidget {
+  static const String Route = "/admin";
   final Function function;
   AdminLogin({this.function});
   @override
@@ -36,17 +36,20 @@ class _AdminLoginState extends State<AdminLogin> {
     super.initState();
   }
 
-  BuildContext gcontext;
+
+
+
   @override
   Widget build(BuildContext context) {
-    // final prov = BlocProvider.of<UserCubit>(context);
-    this.gcontext = context;
+    // Instantiating the emailController and the password Controller
     if (emailController == null) {
       this.emailController = new TextEditingController();
     }
     if (passwordController == null) {
       this.passwordController = new TextEditingController();
     }
+    StaticDataStore.adminState = BlocProvider.of<AdminState>(context);
+
     return MaterialApp(
       home: Scaffold(
         body: Container(
@@ -88,21 +91,21 @@ class _AdminLoginState extends State<AdminLogin> {
                               child: this.loading
                                   ? CircularProgressIndicator()
                                   : Text(
-                                message,
-                                style: TextStyle(
-                                  color: warningMessage
-                                      ? Colors.red
-                                      : Colors.green,
-                                ),
-                              ),
+                                      message,
+                                      style: TextStyle(
+                                        color: warningMessage
+                                            ? Colors.red
+                                            : Colors.green,
+                                      ),
+                                    ),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(9),
                                   border: Border.all(
                                     color: message == ""
                                         ? Colors.white
                                         : (warningMessage
-                                        ? Colors.red
-                                        : Colors.green),
+                                            ? Colors.red
+                                            : Colors.green),
                                     style: BorderStyle.solid,
                                     width: 1.0,
                                   )),
@@ -117,7 +120,7 @@ class _AdminLoginState extends State<AdminLogin> {
                               cursorColor: Theme.of(context).primaryColor,
                               decoration: InputDecoration(
                                 labelText: "Email",
-                                hintText: "samuael@gmail.com",
+                                hintText: "example@email.com",
                                 hintStyle: TextStyle(
                                   color: Color(0XFFaaaaaa),
                                 ),
@@ -144,70 +147,67 @@ class _AdminLoginState extends State<AdminLogin> {
                                 textColor: Colors.white,
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 10),
-                                minWidth: MediaQuery.of(context).size.width * 0.8,
+                                minWidth:
+                                    MediaQuery.of(context).size.width * 0.8,
                                 splashColor: Color(0xFFffffff),
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () async {
-                                //   if (emailController.text == '' &&
-                                //       passwordController.text == "") {
-                                //     setState(() {
-                                //       message = "Fill the Entries!";
-                                //       warningMessage = true;
-                                //     });
-                                //     return;
-                                //   } else if (emailController.text == "") {
-                                //     setState(() {
-                                //       message = "Fill the Email Entry First";
-                                //       warningMessage = true;
-                                //     });
-                                //     return;
-                                //   } else if (passwordController.text == "") {
-                                //     setState(() {
-                                //       message = "Fill the Password Entry First";
-                                //       warningMessage = true;
-                                //     });
-                                //     return;
-                                //   }
-                                //   email = emailController.text;
-                                //   password = passwordController.text;
-                                //   this.loading = true;
-                                //   var loginres = await gcontext
-                                //       .read<UserCubit>()
-                                //       .loginUser(email, password);
-                                //
-                                //   if (loginres != null) {
-                                //     if (loginres.success) {
-                                //       setState(() {
-                                //         this.loading = false;
-                                //         message = loginres.message;
-                                //         warningMessage = false;
-                                //       });
-                                //
-                                //       Navigator.of(context).pushNamedAndRemoveUntil(
-                                //           HomeScreen.Route, (route) => false);
-                                //     } else {
-                                //       setState(() {
-                                //         this.loading = false;
-                                //         message = loginres.message;
-                                //         warningMessage = true;
-                                //       });
-                                //     }
-                                //   } else {
-                                //     setState(() {
-                                //       this.loading = false;
-                                //       message = "Error Happened .. ";
-                                //       warningMessage = true;
-                                //     });
-                                //     return;
-                                //   }
+                                  if (emailController.text == '' &&
+                                      passwordController.text == "") {
+                                    setState(() {
+                                      message = "Fill the Entries!";
+                                      warningMessage = true;
+                                    });
+                                    return;
+                                  } else if (emailController.text == "") {
+                                    setState(() {
+                                      message = "Fill the Email Entry First";
+                                      warningMessage = true;
+                                    });
+                                    return;
+                                  } else if (passwordController.text == "") {
+                                    setState(() {
+                                      message = "Fill the Password Entry First";
+                                      warningMessage = true;
+                                    });
+                                    return;
+                                  }
+                                  email = emailController.text;
+                                  password = passwordController.text;
+                                  this.loading = true;
+                                  var loginres = await context
+                                      .read<AdminState>()
+                                      .adminLogin(email, password);
 
-                                  Navigator.of(context).pushNamed(AdminPage.RouteName);
+                                  if (loginres != null) {
+                                    if (loginres.success) {
+                                      setState(() {
+                                        this.loading = false;
+                                        message = loginres.message;
+                                        warningMessage = false;
+                                      });
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                              AdminPage.RouteName,
+                                              (route) => false);
+                                    } else {
+                                      setState(() {
+                                        this.loading = false;
+                                        message = loginres.message;
+                                        warningMessage = true;
+                                      });
+                                    }
+                                  } else {
+                                    setState(() {
+                                      this.loading = false;
+                                      message = "Error Happened .. ";
+                                      warningMessage = true;
+                                    });
+                                    return;
+                                  }
                                 },
                                 icon: IconButton(
                                   icon: Icon(Icons.login),
-                                  onPressed: (){
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>AdminPage()));
-                                  },
                                 ),
                                 label: Text("Log As Admin"),
                               ),
@@ -223,7 +223,6 @@ class _AdminLoginState extends State<AdminLogin> {
                                 ),
                               ),
                             ),
-
                           ],
                         ),
                       ),

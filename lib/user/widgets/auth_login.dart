@@ -207,11 +207,22 @@ class _AuthLoginState extends State<AuthLogin> {
                         ),
                         FlatButton(
                           onPressed: () {
-                            print("thi i s the login classs");
                             widget.function(1);
                           },
                           child: Text(
                             " Sign Up ... ",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/admin");
+                            // widget.function(1);
+                          },
+                          child: Text(
+                            " Log as Admin ",
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                             ),

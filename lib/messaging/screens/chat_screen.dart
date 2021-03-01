@@ -36,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
       final EEMessage mess = EEMessage(
         receiverID: widget.user.id,
         seen: false,
-        senderID: StaticDataStore.ID,
+        senderID: StaticDataStore.userState.state.id,
         sent: false,
         text: messageText,
       );
@@ -126,7 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: EdgeInsets.only(top: 15.0),
                     itemBuilder: (BuildContext context, int index) {
                       final EEMessage message = widget.user.messages[index];
-                      final bool isMe = message.senderID == StaticDataStore.ID;
+                      final bool isMe = message.senderID == StaticDataStore.userState.state.id;
                       return MessageItem(message, isMe);
                     },
                   ),

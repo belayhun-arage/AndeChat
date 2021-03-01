@@ -2,12 +2,11 @@ import 'dart:developer';
 import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:ChatUI/libs.dart';
-
 import 'dart:convert';
 import 'dart:async';
 
-// This HTTP CALL Handler class is to be called by all the 
-// data_provider classes of each features 
+// This HTTP CALL Handler class is to be called by all the
+// data_provider classes of each features
 class HttpCallHandler extends Service {
   Client client = new Client();
 
@@ -22,7 +21,7 @@ class HttpCallHandler extends Service {
       await HttpCallHandler.getInstance();
       return _sessHandler;
     }
-    return _sessHandler; 
+    return _sessHandler;
   }
 
   static Future<HttpCallHandler> getInstance() async {
@@ -36,7 +35,7 @@ class HttpCallHandler extends Service {
     }
     return _handler;
   }
-  
+
   Future<Uint8List> getProfileImage(String imageurl) async {
     var response = await client.get("${HOST}$imageurl");
     if (response != null) {
@@ -44,6 +43,7 @@ class HttpCallHandler extends Service {
     }
     return null;
   }
+
   /// getOutChats returning the messages between the user and the alie
   /// whose id is used in the argument
   /// returning future of List of messages  if success

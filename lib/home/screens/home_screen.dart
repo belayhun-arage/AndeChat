@@ -96,6 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //ignore: close_sinks
+    final ideaBloc = BlocProvider.of<IdeaBloc>(context);
+    ideaBloc.add(IdeaLoadMoney());
     MainService.getInstance().then((mss) {
       mss.startService();
     });
@@ -191,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     case 0:
                       {
                         return Expanded(
-                          child: Container(color: Colors.blue),
+                          child: IdeaListMoney(),
                         );
                       }
                     case 1:
