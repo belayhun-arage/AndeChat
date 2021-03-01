@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+///This class is the one that list ideas and delete ideas
 class IdeaFragment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
