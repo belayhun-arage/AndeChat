@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/user/repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,5 +37,9 @@ class UserState extends Cubit<Alie> {
     if (user != null) {
       emit(user);
     }
+  }
+
+  Future<Alie> updateMyProfile(String username,String bio) async  {
+    final alie = await this.repo.updateMyProfile(username  , bio );
   }
 }

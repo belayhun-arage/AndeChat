@@ -23,6 +23,10 @@ class UserRepository {
     return await this.provider.Register(registrationInput);
   }
 
+  Future<Alie> updateMyProfile(String username, String bio) async {
+    return await this.provider.updateMyProfile(username, bio);
+  }
+
   Future<List<Alie>> getMyFriends() async {
     final friends = await this.provider.getMyFriends();
     MessagingDataProvider provide = await MessagingDataProvider.getInstance();

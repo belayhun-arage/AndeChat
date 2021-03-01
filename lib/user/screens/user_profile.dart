@@ -1,11 +1,17 @@
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChangeProfile extends StatelessWidget {
   static const String RouteName = "/editProfile";
   @override
   Widget build(BuildContext context) {
+    UserState userState = BlocProvider.of<UserState>(context);
+    TextEditingController usernameController = new TextEditingController();
+    TextEditingController bioController = new TextEditingController();
+
+    String message = "  Edit Your Profile ";
     return Scaffold(
       appBar: AppBar(
         title: Text(" Change Your Profile "),
@@ -19,7 +25,6 @@ class ChangeProfile extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(30, 50, 30, 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  
                   children: <Widget>[
                     Container(
                       height: 30,
@@ -36,7 +41,7 @@ class ChangeProfile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Edit Profile ',
+                      '$message',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -72,33 +77,9 @@ class ChangeProfile extends StatelessWidget {
                             IconButton(
                               icon: Icon(Icons.add_a_photo),
                               onPressed: () async {
-                                pickImage(context);
+                                final image = await pickImage(context);
                               },
-                              
-                            ) , 
-                            // RaisedButton(
-                            //   child: Positioned(
-                            //     bottom: 1,
-                            //     right: 1,
-                            //     child: Container(
-                            //       margin: EdgeInsets.only(top: 30, left: 40),
-                            //       height: 40,
-                            //       width: 40,
-                            //       child: Icon(
-                            //         Icons.add_a_photo,
-                            //         color: Colors.white,
-                            //         size: 45.0,
-                            //       ),
-                            //       decoration: BoxDecoration(
-                            //           color: Colors.deepOrange,
-                            //           borderRadius: BorderRadius.all(
-                            //               Radius.circular(20))),
-                            //     ),
-                            //   ),
-                            //   onPressed: () async {
-                            //     pickImage(context);
-                            //   },
-                            // )
+                            ),
                           ],
                         ),
                       ],
@@ -123,6 +104,7 @@ class ChangeProfile extends StatelessWidget {
                               child: TextField(
                                 decoration:
                                     InputDecoration(labelText: 'Username'),
+                                controller: usernameController,
                                 // onChanged: (value) => title = value,
                               ),
                             ),
@@ -146,6 +128,7 @@ class ChangeProfile extends StatelessWidget {
                                 child: TextField(
                                   decoration: InputDecoration(labelText: 'Bio'),
                                   // onChanged: (value) => title = value,
+                                  controller: bioController,
                                 ),
                               ),
                             ),
@@ -158,24 +141,31 @@ class ChangeProfile extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Container(
-                            height: 70,
-                            width: 200,
-                            child: Align(
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                    color: Colors.white70, fontSize: 20),
+                        child: GestureDetector(
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              height: 70,
+                              width: 200,
+                              child: Align(
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      color: Colors.white70, fontSize: 20),
+                                ),
                               ),
+                              decoration: BoxDecoration(
+                                  color: Colors.deepOrange,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                  )),
                             ),
-                            decoration: BoxDecoration(
-                                color: Colors.deepOrange,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                )),
                           ),
+                          onTap: () async {
+                            final alie = await userState.updateMyProfile(
+                                usernameController.text, bioController.text);
+                            userState.updateUser(alie);
+                          },
                         ),
                       )
                     ],

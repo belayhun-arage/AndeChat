@@ -26,23 +26,22 @@ class _MyNavigationState extends State<MyNavigation> {
   }
 
   List<String> categories = [
+    "Home",
     "Profile",
     "New Group",
     "Setting",
     "Theme",
     "About Us",
     "Logout"
-
-    // "New Account",
   ];
   Map<String, List<Object>> categoryList = {
+    "Home": [Icons.home, HomeScreen.Route],
     "Profile": [Icons.person, ChangeProfile.RouteName],
     "New Group": [Icons.new_releases_rounded, "/"],
     "Setting": [Icons.settings, "/"],
     "Theme": [Icons.theater_comedy, "/"],
     "About Us": [Icons.group_work_sharp, "/"],
     "Logout": [Icons.logout, "/"],
-    // "Add Contact": [Icons.person_add, ""],
   };
 
   @override

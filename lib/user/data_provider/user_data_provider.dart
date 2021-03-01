@@ -21,15 +21,7 @@ class UserDataProvider extends Service {
   // Header Data Will be listed here ...
   static UserDataProvider _handler;
   static SessionHandler _sessHandler;
-// @Summary 登录
-// @Description 登录
-// @Produce json
-// @Param body body controllers.LoginParams true "body参数"
-// @Success 200 {string} string "ok" "返回用户信息"
-// @Failure 400 {string} string "err_code：10002 参数错误； err_code：10003 校验错误"
-// @Failure 401 {string} string "err_code：10001 登录失败"
-// @Failure 500 {string} string "err_code：20001 服务错误；err_code：20002 接口错误；err_code：20003 无数据错误；err_code：20004 数据库异常；err_code：20005 缓存异常"
-// @Router /user/person/login [post]
+
   static HttpCallHandler httpCallHandler;
   static const String HOST = StaticDataStore.HOST;
 
@@ -93,6 +85,37 @@ class UserDataProvider extends Service {
       }
     }
     return null;
+  }
+
+  Future<Alie> updateMyProfile(String username, String bio) async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
+    var response = await client.put(
+      "${HOST}api/user/",
+      headers: headers,
+      body: jsonEncode({
+        "username" : username , 
+        "bio": bio  , 
+      }),
+    );
+    if (response == null) {
+      return null;
+    }
+    if (response.statusCode == 200) {
+      try {
+        var body = jsonDecode(response.body) as Map<String, dynamic>;
+        print(body);
+        _sessHandler.updateCookie(response);
+        if (!(body['success'] as bool)) {
+          return null;
+        }
+        return Alie.fromJson(body["user"] as Map<String, dynamic>);
+      } catch (e, a) {
+        return null;
+      }
+    }
   }
 
   Future<Alie> getMyProfile() async {
@@ -199,8 +222,5 @@ class UserDataProvider extends Service {
     return null;
   }
 
-
-  Future<bool >  logout(){
-    
-  }
+  Future<bool> logout() {}
 }
