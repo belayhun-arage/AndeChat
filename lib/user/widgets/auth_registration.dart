@@ -1,7 +1,17 @@
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+class EmailFieldValidator {
+  static String validate(String value) {
+    return value.isEmpty ? 'Email Can Not Be Empty' : null;
+  }
+}
 
+class PasswordFieldValidator {
+  static String validate(String value) {
+    return value.isEmpty ? 'Password Can Not Be Empty' : null;
+  }
+}
 class AuthRegistration extends StatefulWidget {
   final Function(int val) function;
 
