@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 // void main() {
 //   runApp(MyApp());
 // }
-
+///This class calls fragment widget from the widgets. This class is the root of the app
 class AdminPage extends StatelessWidget {
   static const RouteName = '/adminpage';
-  // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
