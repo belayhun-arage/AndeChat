@@ -48,7 +48,7 @@ class IdeaUpdate extends IdeaEvent {
   String toString() => 'Idea Updated {idea: $idea}';
 }
 
-//class ideaevent delete ideas that are no more important anymore
+//event IdeaDelete delete ideas that has no more important
 class IdeaDelete extends IdeaEvent {
   final Idea idea;
 
