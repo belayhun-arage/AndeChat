@@ -2,9 +2,11 @@ import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/messaging/widgets/message_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math';
 
 class ChatScreen extends StatefulWidget {
   static const String Route = "/chat";
+  static WebSocketService websocketService;
   Alie user;
   ChatScreen({
     this.user,
@@ -15,57 +17,19 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  static WebSocketService websocketService;
-
   @override
   void initState() {
-    if (websocketService == null) {
+    if (ChatScreen.websocketService == null) {
       WebSocketService.getInstance().then((ws) {
-        websocketService = ws;
+        ChatScreen.websocketService = ws;
       });
     }
     super.initState();
   }
 
-  void _sendMessage() {
-    final String timeValue =
-        "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}";
-    setState(() {
-      final String messageText = textInputController.text;
-      textInputController.text = "";
-      final EEMessage mess = EEMessage(
-        receiverID: widget.user.id,
-        seen: false,
-        senderID: StaticDataStore.userState.state.id,
-        sent: false,
-        text: messageText,
-      );
-
-      websocketService.sendEEMessage(mess);
-      // messageso.insert(0, mess);
-    });
-  }
-
-  void sendMessageWithString(String message) {
-    final String timeValue =
-        "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}";
-    setState(() {
-      final String messageText = message;
-      textInputController.text = "";
-      final Message mess = Message(
-        isLiked: false,
-        sender: widget.user,
-        text: messageText,
-        time: timeValue,
-        unread: true,
-      );
-      messageso.insert(0, mess);
-    });
-  }
-
   List<Message> messageso;
   final TextEditingController textInputController = new TextEditingController();
-
+  ScrollController scroller = new ScrollController();
   @override
   Widget build(BuildContext context) {
     if (widget.user == null) {
@@ -73,7 +37,6 @@ class _ChatScreenState extends State<ChatScreen> {
           as Map<String, Object>)['user'] as Alie;
     }
     messageso = messages;
-
     // passing the alie to the interacting alie bloc
     InteractiveUser intuser = BlocProvider.of<InteractiveUser>(context);
     intuser.updateActiveUserMessages(widget.user);
@@ -118,16 +81,20 @@ class _ChatScreenState extends State<ChatScreen> {
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
                   ),
-                  child: ListView.builder(
-                    reverse: true,
-                    itemCount: widget.user.messages == null
-                        ? 0
-                        : widget.user.messages.length,
-                    padding: EdgeInsets.only(top: 15.0),
-                    itemBuilder: (BuildContext context, int index) {
-                      final EEMessage message = widget.user.messages[index];
-                      final bool isMe = message.senderID == StaticDataStore.userState.state.id;
-                      return MessageItem(message, isMe);
+                  child: BlocBuilder<InteractiveUser, Alie>(
+                    builder: (_, alie) {
+                      final messages = alie.messages;
+                      return ListView.builder(
+                        controller: scroller,
+                        itemCount: messages == null ? 0 : messages.length,
+                        padding: EdgeInsets.only(top: 15.0),
+                        itemBuilder: (BuildContext context, int index) {
+                          final EEMessage message = messages[index];
+                          final bool isMe = message.senderID ==
+                              StaticDataStore.userState.state.id;
+                          return MessageItem(message, isMe);
+                        },
+                      );
                     },
                   ),
                 ),
@@ -150,10 +117,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       textCapitalization: TextCapitalization.sentences,
                       showCursor: true,
                       controller: textInputController,
-                      onSubmitted: sendMessageWithString,
+                      // onSubmitted: sendMessageWithString,
                       decoration: InputDecoration(
                         hintText: "Message here ...",
                       ),
+                      onEditingComplete: () => _sendMessage(),
                     ),
                   ),
                   IconButton(
@@ -168,5 +136,44 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+
+  void sendTypingMessage() {
+    TypingMessage typm = TypingMessage();
+  }
+
+  void _sendMessage() {
+    final String timeValue =
+        "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}";
+    setState(() {
+      final String messageText = textInputController.text;
+      textInputController.text = "";
+      final EEMessage mess = EEMessage(
+        receiverID: widget.user.id,
+        seen: false,
+        senderID: StaticDataStore.userState.state.id,
+        sent: false,
+        text: messageText,
+      );
+
+      ChatScreen.websocketService.sendEEMessage(mess);
+    });
+  }
+
+  void sendMessageWithString(String message) {
+    final String timeValue =
+        "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}";
+    setState(() {
+      final String messageText = message;
+      textInputController.text = "";
+      final Message mess = Message(
+        isLiked: false,
+        sender: widget.user,
+        text: messageText,
+        time: timeValue,
+        unread: true,
+      );
+      messageso.insert(0, mess);
+    });
   }
 }

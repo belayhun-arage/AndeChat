@@ -47,6 +47,7 @@ class _CreateIdeaState extends State<CreateIdea> {
   @override
   Widget build(BuildContext context) {
     // final CourseArgument args = ModalRoute.of(context).settings.arguments;
+    MyIdeaBloc myideas = BlocProvider.of<MyIdeaBloc>(context);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -104,32 +105,32 @@ class _CreateIdeaState extends State<CreateIdea> {
               SizedBox(
                 height: 40.0,
               ),
-              Stack(
-                children: <Widget>[
-                  Container(
-                    // decoration: new BoxDecoration(color: Colors.white),
-                    alignment: Alignment.center,
-                    height: 100,
+              // Stack(
+              //   children: <Widget>[
+              //     // Container(
+              //     //   // decoration: new BoxDecoration(color: Colors.white),
+              //     //   alignment: Alignment.center,
+              //     //   height: 100,
 
-                    child: _image == null
-                        ? Image.asset("assets/images/john.jpg")
-                        : Image.file(_image, fit: BoxFit.fill),
-                  ),
-                  Positioned(
-                    bottom: 10,
-                    right: 80, //give the values according to your requirement
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.add_a_photo,
-                        size: 60.0,
-                      ),
-                      onPressed: () {
-                        getImage();
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              //     //   child: _image == null
+              //     //       ? Image.asset("assets/images/john.jpg")
+              //     //       : Image.file(_image, fit: BoxFit.fill),
+              //     // ),
+              //     Positioned(
+              //       bottom: 10,
+              //       right: 80, //give the values according to your requirement
+              //       child: IconButton(
+              //         icon: Icon(
+              //           Icons.add_a_photo,
+              //           size: 60.0,
+              //         ),
+              //         onPressed: () {
+              //           getImage();
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(
                 height: 40.0,
               ),
@@ -143,16 +144,6 @@ class _CreateIdeaState extends State<CreateIdea> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  // final IdeaEvent event = IdeaCreate(
-                  //   Idea(
-                  //     title: this._idea["title"],
-                  //     description: this._idea["description"],
-                  //   ),
-                  // );
-                  // BlocProvider.of<IdeaBloc>(context).add(event);
-
-                  // Navigator.of(context).pushNamedAndRemoveUntil(
-                  //     IdeaList.routeName, (route) => false);
                   final form = _formKey.currentState;
                   if (form.validate()) {
                     form.save();
@@ -171,19 +162,12 @@ class _CreateIdeaState extends State<CreateIdea> {
                               description: this._idea["description"],
                             ),
                           );
-                    // print((event as IdeaCreate).idea);
-                    BlocProvider.of<IdeaBloc>(context).add(event);
-                    print("lik mike");
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        IdeaList.routeName, (route) => false);
+                    myideas.add(event);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    Navigator.of(context)
+                        .pushNamed(IdeaList.routeName, );
                   }
-
-                  // server.createIdea(
-                  //   Idea(
-                  //     title: this._idea["title"],
-                  //     description: this._idea["description"],
-                  //   ),
-                  // );
                 },
               ),
             ],

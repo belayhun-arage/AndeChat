@@ -28,13 +28,13 @@ class Idearepository {
   }
 
   //a signature of crude updateIdea to update an idea asynchronously
-  Future<void> updateIdea(Idea idea) async {
+  Future<bool> updateIdea(Idea idea) async {
     return await provider.updateIdea(idea);
   }
 
  
   //a signature of crude deleteIdea to delete a particular idea 
-  Future<void> deleteIdea(String id) async {
+  Future<bool> deleteIdea(String id) async {
     return await provider.deleteIdea(id);
   }
 }

@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 Future<File> pickImage(BuildContext context) async {
   File image;
-  showDialog(
+  await showDialog(
     context: context,
     builder: (conta) {
       return AlertDialog(
@@ -68,10 +68,12 @@ Future<File> pickImage(BuildContext context) async {
       );
     },
     barrierDismissible: true,
-    useSafeArea: true , 
+    useSafeArea: true,
   );
   if (image == null) {
-    print(" The Image Is Null ");
+    print("\n\n\n\n\\n\nn\n\n The Image Is Null \n\n\n\n\n\n\n\n\n");
+  }else {
+    print("\n\n\n\n\n\n\nImage Is Loaded \n\n\n\nn\n");
   }
   return image;
 }

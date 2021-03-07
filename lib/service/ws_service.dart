@@ -6,11 +6,19 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
 class WebSocketService {
+// @Summary 登录
+// @Description 登录
+// @Produce json
+// @Param body body controllers.LoginParams true "body参数"
+// @Success 200 {string} string "ok" "返回用户信息"
+// @Failure 400 {string} string "err_code：10002 参数错误； err_code：10003 校验错误"
+// @Failure 401 {string} string "err_code：10001 登录失败"
+// @Failure 500 {string} string "err_code：20001 服务错误；err_code：20002 接口错误；err_code：20003 无数据错误；err_code：20004 数据库异常；err_code：20005 缓存异常"
+// @Router /user/person/login [post]
   static WebSocketChannel _channel;
   static WebSocketService _service; // 10.9.216.182
   // static const String WSHOST = 'ws://10.0.3.2:8080/chat/';
-  static const String WSHOST = 'ws://10.9.216.182:8080/chat/';
-
+  static const String WSHOST = 'ws://10.0.3.2:8080/chat/';
   //  List Of Blocs will be listed here .
   static UserState userState;
   static FriendsState firendsState;
@@ -19,7 +27,7 @@ class WebSocketService {
   static MessagingDataProvider messagingDataProvider;
 
   // WebSocketService();
-  WebSocketChannel get channel {
+  static WebSocketChannel get channel {
     return _channel;
   }
 
@@ -61,6 +69,8 @@ class WebSocketService {
         print(data.runtimeType);
         final jsonMessage = jsonDecode(data.toString());
         switch (jsonMessage['status']) {
+
+          /// End to End Message
           case WS_STATUS_CODE.EEMESSAGE:
             {
               /*
@@ -93,39 +103,67 @@ class WebSocketService {
               // here  firendslist and its internal messages are to be changed
               int alieIndex = 0;
               int indctr = 0;
-              List<Alie> updatedFriends =
-                  StaticDataStore.friendsState.state.map<Alie>((alie) {
-                if (alie.id == alieID) {
-                  alie.messages ??= [];
-                  alie.messages.add(eemessage);
-                  alieIndex = indctr;
+
+              Alie newAlie = StaticDataStore.interactingUser.state;
+              // List<Alie> updatedFriends =
+              //     StaticDataStore.friendsState.state.map<Alie>((alie) {
+              //   if (alie.id == alieID) {
+              //     alie.messages == null ? [] : alie.messages;
+              //     alie.messages.add(eemessage);
+              //     alieIndex = indctr;
+              //   }
+              //   indctr++;
+              //   return alie;
+              // }).toList(growable: true);
+              List<Alie> myfriends = StaticDataStore.friendsState.state;
+              if (myfriends == null || myfriends.length == 0) {
+                newAlie.messages =
+                    newAlie.messages != null ? newAlie.messages : [];
+                newAlie.messages.add(eemessage);
+                myfriends = [newAlie];
+              } else {
+                for (int a = 0; a < myfriends.length; a++) {
+                  final dalie = myfriends[a];
+                  if (dalie.id == alieID) {
+                    dalie.messages.add(eemessage);
+                    myfriends[a] = dalie;
+                    break;
+                  }
                 }
-                indctr++;
-                return alie;
-              }).toList(growable: true);
+                myfriends.add(newAlie);
+              }
 
               // swaping the alie to the firest row in the alies list
-              final updatedAlie = updatedFriends[alieIndex];
-              updatedFriends.removeAt(alieIndex);
-              updatedFriends = [updatedAlie, ...updatedFriends];
+              // final updatedAlie = updatedFriends[alieIndex];
+              // updatedFriends.removeAt(alieIndex);
+              // updatedFriends = [updatedAlie, ...updatedFriends];
 
-              // now notifying the change to the
-              updatedFriends = removeRedundantAlie(updatedFriends);
-              StaticDataStore.friendsState.updateFriendsState(updatedFriends);
+              // if (StaticDataStore.interactingUser.state.id == alieID) {
+              //   final alie = StaticDataStore.interactingUser.state;
+              //   // alie.messages = removeRedundantMessage(alie.messages);
+              //   if (alie.messages != null) {
+              //     alie.messages.add(eemessage);
+              //   } else {
+              //     alie.messages = [eemessage];
+              //   }
+              //   StaticDataStore.interactingUser.updateActiveUserMessages(alie);
+              // }
+              // // now notifying the change to the
+              // updatedFriends = removeRedundantAlie(updatedFriends);
+              StaticDataStore.friendsState.updateFriendsState(myfriends);
               break;
             }
+
+          /// active friends notification
           case WS_STATUS_CODE.ACTIVE_FRIENDS:
             {
-
               onlineFriendsStates ??= await OnlineFriends.instance;
               final friends =
                   List.generate(jsonMessage["active_friends"].length, (val) {
                 return jsonMessage["active_friends"][val] as String;
               });
-              // friends= removeRedundantAlieID(friends);
               onlineFriendsStates.updateOnlineFriends(friends);
               break;
-
             }
           case WS_STATUS_CODE.ALIE_PROFILE_CHANGE:
             {
@@ -152,53 +190,68 @@ class WebSocketService {
             }
           case WS_STATUS_CODE.SEEN:
             {
-              print("----------------------------");
-
-              break;
-            }
-          case WS_STATUS_CODE.SEEN:
-            {
-              print("----------------------------");
-
+              /*
+                {
+                  "status": this.status,
+                  "body":  {
+                    "sender_id" : "99999999999" ,
+                    "observer_id"  : "99998888888" , 
+                  }
+                }
+              */
+              final seen = SeenMessage.fromJson(jsonMessage['body']);
+              print(" SEEN MESSAGE $jsonMessage");
               break;
             }
           case WS_STATUS_CODE.TYPING:
             {
-              print("----------------------------");
+              List<Alie> alies = [];
 
+              final typingMessage = TypingMessage.fromJson(jsonMessage);
+              if (typingMessage.body.typerID == userState.state.id) {
+                break;
+              }
+              bool changed = false;
+              for (Alie alie in StaticDataStore.friendsState.state) {
+                if (alie.id == typingMessage.body.typerID) {
+                  alie.typing = true;
+                }
+                alies.add(alie);
+              }
+              StaticDataStore.friendsState.updateFriendsState(alies);
               break;
             }
-          case WS_STATUS_CODE.GROUP_JOIN:
-            {
-              print("----------------------------");
+          // case WS_STATUS_CODE.GROUP_JOIN:
+          //   {
+          //     print("----------------------------");
 
-              break;
-            }
-          case WS_STATUS_CODE.GROUP_LEAVE:
-            {
-              print("----------------------------");
+          //     break;
+          //   }
+          // case WS_STATUS_CODE.GROUP_LEAVE:
+          //   {
+          //     print("----------------------------");
 
-              break;
-            }
-          case WS_STATUS_CODE.UNKNOWN:
-            // TODO: Handle this case.
-            print("----------------------------");
+          //     break;
+          //   }
+          // case WS_STATUS_CODE.UNKNOWN:
+          //   // TODO: Handle this case.
+          //   print("----------------------------");
 
-            break;
-          case WS_STATUS_CODE.STOP_TYPING:
-            // TODO: Handle this case.
-            print("----------------------------");
+          //   break;
+          // case WS_STATUS_CODE.STOP_TYPING:
+          //   // TODO: Handle this case.
+          //   print("----------------------------");
 
-            break;
-          case WS_STATUS_CODE.NEW_ALIE:
-            // TODO: Handle this case.
-            print("----------------------------");
-            break;
-          case WS_STATUS_CODE.GROUP_PROFILE_CHANGE:
-            // TODO: Handle this case.
-            print("----------------------------");
+          //   break;
+          // case WS_STATUS_CODE.NEW_ALIE:
+          //   // TODO: Handle this case.
+          //   print("----------------------------");
+          //   break;
+          // case WS_STATUS_CODE.GROUP_PROFILE_CHANGE:
+          //   // TODO: Handle this case.
+          //   print("----------------------------");
 
-            break;
+          //   break;
         }
       }, onError: (mess) {
         print("     Error Happened ... ");
@@ -229,7 +282,7 @@ class WebSocketService {
 
   // sendEEMessage
   bool sendSeenMessage(SeenMessage seenmes) {
-    _channel.sink.add(jsonEncode(seenmes));
+    _channel.sink.add(jsonEncode(seenmes.toJson()));
   }
 
   bool sendTypingMessage(TypingMessage message) {
@@ -250,9 +303,28 @@ class WebSocketService {
       String id = alies[a].id;
       int count = 0;
       alies.removeWhere((alie) {
-        count++;
-        return count > 1 && alie.id == id;
+        if (alie.id == id) {
+          count++;
+        }
+        return count > 1;
       });
     }
+    return alies;
+  }
+
+  static List<EEMessage> removeRedundantMessage(List<EEMessage> messages) {
+    for (int a = 0; a < messages.length; a++) {
+      int msn = messages[a].messageNumber;
+      int count = 0;
+      for (int z = 0; z < messages.length; z++) {
+        messages.removeWhere((message) {
+          if (message.messageNumber == msn) {
+            count++;
+          }
+          return count > 1;
+        });
+      }
+    }
+    return messages;
   }
 }

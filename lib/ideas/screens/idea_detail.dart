@@ -31,9 +31,8 @@ class IdeaDetail extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
-                context.read<IdeaBloc>().add(IdeaDelete(this.idea));
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    IdeaList.routeName, (route) => false);
+                context.read<MyIdeaBloc>().add(IdeaDelete(this.idea));
+                Navigator.of(context).pop();
               }),
         ],
       ),
@@ -45,49 +44,32 @@ class IdeaDetail extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(24))),
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              // mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 SizedBox(
                   height: 60.0,
                 ),
                 Text(
                   "Title",
-                  style: eventTitleTextStyle,
                 ),
                 SizedBox(height: 15.0),
-                Text('${this.idea.title}'),
+                Text(
+                  '${this.idea.title}',
+                  style: eventTitleTextStyle,
+                ),
                 SizedBox(
                   height: 20.0,
                 ),
                 Text(
-                  "description",
-                  style: eventTitleTextStyle,
+                  "Description",
                 ),
                 SizedBox(height: 15.0),
-                Text('${this.idea.description}')
-              ]
-
-              // child: Column(
-              //   children: [
-              //     ListTile(
-              //       title: Text('Title: ${this.idea.title}'),
-              //       subtitle: Text('ECTS: ${this.idea.description}'),
-              //     ),
-              //     Text(
-              //       'Details',
-              //       style: TextStyle(
-              //         fontSize: 18,
-              //         fontWeight: FontWeight.bold,
-              //       ),
-              //     ),
-              //     SizedBox(
-              //       height: 10,
-              //     ),
-              //     Text(this.idea.description),
-              //   ],
-              // ),
-              ),
+                Expanded(
+                  child: Text('${this.idea.description}' ,),
+                ),
+              ]),
         ),
       ),
     );

@@ -142,10 +142,6 @@ class UpdateData {
     return friends;
   }
 
-  // Future<List<Group>>  getGroups() async {
-
-  // }
-
   static Future<bool> downloadImage(Alie user) async {
     instantiateStates();
     if (user == null || user.imageUrl == "") {
@@ -157,16 +153,17 @@ class UpdateData {
     var dir = user.imageUrl.split("/");
 
     var filePathAndName = firstPath + dir[dir.length - 1];
+    print(filePathAndName);
     // saving the file path to the shared preferences
     _sharedPrefHandler.setFilePath(firstPath);
 
-    await Directory(firstPath).create(recursive: true);
+    final direct = await Directory(firstPath).create(recursive: true);
     File file2 = new File(filePathAndName);
     if (file2.existsSync()) {
       return false;
     }
-    Uint8List bodyBytes =
-        await userDataProvider.getProfileImage(userState.state.imageUrl);
+    Uint8List bodyBytes = await userDataProvider
+        .getProfileImage(StaticDataStore.userState.state.imageUrl);
     if (!(bodyBytes == null || bodyBytes.length == 0)) {
       // valie image found now i am saving to the localstorage
 
@@ -192,6 +189,4 @@ class UpdateData {
     }
     onSyncSearchController.add(false);
   }
-
-  void webSocketConnectionHandler() {}
 }

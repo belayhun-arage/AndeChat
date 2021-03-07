@@ -2,7 +2,9 @@ import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'admin/bloc/admin_idea_state.dart';
 import 'admin/bloc/admin_state_bloc.dart';
+import 'admin/bloc/admin_users_.dart';
 import 'ideas/screens/idea_rout.dart';
 
 void main() async {
@@ -50,9 +52,20 @@ class MyApp extends StatelessWidget {
         }),
         BlocProvider(
           create: (_) {
-            return AdminState( repo :AdminRepository() );
+            return AdminState(repo: AdminRepository());
           },
         ),
+        BlocProvider(
+          create: (_) => MyIdeaBloc(
+            idearepository: Idearepository(),
+          ),
+        ) , 
+        BlocProvider(
+          create: (_)=> AdminUsersState(repo : AdminUserRepository()),
+        ),
+        BlocProvider(
+          create: (_)=> AdminIdeaState(repo : AdminIdeaRepository()),
+        )
       ],
 
 /*
@@ -82,7 +95,7 @@ class MyApp extends StatelessWidget {
         // home: HomeScreen(),
         routes: {
           HomeScreen.Route: (context) {
-            return HomeScreen();
+            return HomeScreen.instance ;
           },
           ChatScreen.Route: (context) {
             return ChatScreen();

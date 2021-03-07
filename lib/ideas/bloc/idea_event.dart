@@ -1,3 +1,4 @@
+import 'package:ChatUI/ideas/bloc/bloc.dart';
 import 'package:ChatUI/ideas/models/models.dart';
 
 import 'package:equatable/equatable.dart';
@@ -23,7 +24,7 @@ class IdeaLoad extends IdeaEvent {
   List<Object> get props => [];
 }
 
-//class IdeaCreate creats a new idea 
+//class IdeaCreate creats a new idea
 class IdeaCreate extends IdeaEvent {
   final Idea idea;
 
@@ -34,6 +35,7 @@ class IdeaCreate extends IdeaEvent {
   @override
   String toString() => 'idea created {idea: $idea} ';
 }
+
 
 //class IdeaUpdate update the content of an idea from the list of ideas
 class IdeaUpdate extends IdeaEvent {

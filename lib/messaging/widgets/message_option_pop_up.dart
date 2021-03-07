@@ -1,3 +1,4 @@
+import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/messaging/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// sinlgle message
 void ShowMessagePopup(BuildContext context, String friendId, int messanumber) {
   InteractiveUser interactiveMan = BlocProvider.of<InteractiveUser>(context);
+  StaticDataStore.interactingUser = interactiveMan;
   showDialog(
     context: context,
     builder: (conta) {
@@ -34,26 +36,12 @@ void ShowMessagePopup(BuildContext context, String friendId, int messanumber) {
               ),
               onTap: () {
                 interactiveMan.add(new MessageDelete(friendId, messanumber));
+                Navigator.pop(context);
               },
             ),
             Container(
               color: Colors.black,
               child: SizedBox(),
-            ),
-            GestureDetector(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Delete",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ),
-                ],
-              ),
             ),
           ],
         ),

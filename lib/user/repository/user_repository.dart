@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ChatUI/libs.dart';
 import 'dart:async';
 
@@ -9,6 +11,17 @@ class UserRepository {
   }
 
   UserDataProvider provider;
+
+  Future<Alie> getLoggedInUser() async {
+    while (true) {
+      if (this.provider == null) {
+        this.provider = await UserDataProvider.getInstance();
+      } else {
+        break;
+      }
+    }
+    return this.provider.getLoggedInUser();
+  }
 
   Future<Alie> getMyProfile() async {
     return this.provider.getMyProfile();
@@ -42,4 +55,18 @@ class UserRepository {
     }
     return friends;
   }
+
+  // deleteMyAccount a method to delete Your account permanently
+  Future<bool> deleteMyAccount() async {
+    return await this.provider.deleteMyAccount();
+  }
+
+  Future<bool> logout() async {
+    return await this.provider.logout();
+  }
+
+  Future<String> changeProfilePicture(File image) async {
+    return await this.provider.changeProfilePicture(image);
+  }
+
 }

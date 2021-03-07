@@ -4,10 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 //Bloc IdeaBloc maps the user event with the corresponding new state
-class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
+class MyIdeaBloc extends Bloc<IdeaEvent, IdeaState>
+    implements Cubit<IdeaState> {
   final Idearepository idearepository;
 
-  IdeaBloc({@required this.idearepository})
+  MyIdeaBloc({@required this.idearepository})
       : assert(idearepository != null),
         super(IdeaLoading());
 
@@ -18,17 +19,6 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
         await idearepository.createIdea(event.idea);
 
         final ideas = await idearepository.getideas(StaticDataStore.ID);
-        yield IdeaLoadSuccess(ideas);
-      } catch (_) {
-        yield IdeaOperationFailure();
-      }
-    }
-
-    if (event is IdeaLoadMoney) {
-      // yield IdeaLoading();
-      try {
-        final ideas = await idearepository.getideasMoney();
-
         yield IdeaLoadSuccess(ideas);
       } catch (_) {
         yield IdeaOperationFailure();
@@ -48,9 +38,11 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
 
     if (event is IdeaUpdate) {
       try {
-        await idearepository.updateIdea(event.idea);
-        final ideas = await idearepository.getideas(StaticDataStore.ID);
-        yield IdeaLoadSuccess(ideas);
+        final result = await idearepository.updateIdea(event.idea);
+        if (result) {
+          final ideas = await idearepository.getideas(StaticDataStore.ID);
+          yield IdeaLoadSuccess(ideas);
+        }
       } catch (_) {
         yield IdeaOperationFailure();
       }
@@ -58,10 +50,19 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> implements Cubit<IdeaState> {
 
     if (event is IdeaDelete) {
       try {
-        await idearepository.deleteIdea(event.idea.id);
-        final ideas = await idearepository.getideas(StaticDataStore.ID);
-        yield IdeaLoadSuccess(ideas);
-      } catch (_) {
+        final value = await idearepository.deleteIdea(event.idea.id);
+        final ideaso = await idearepository.getideas(StaticDataStore.ID);
+        // List<Idea> ideaso = (state is IdeaLoadSuccess)
+        //     ? () {
+        //         (state as IdeaLoadSuccess).ideass.removeWhere((idia) {
+        //           return (idia.id == event.idea.id);
+        //         });
+        //         return (state as IdeaLoadSuccess).ideass;
+        //       }()
+        //     : [];
+        yield IdeaLoadSuccess(ideaso);
+      } catch (e, a) {
+        // print("\n\n\n\n ${e.toString()} \n\n");
         yield IdeaOperationFailure();
       }
     }

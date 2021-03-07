@@ -1,4 +1,6 @@
+import 'package:ChatUI/admin/bloc/admin_idea_state.dart';
 import 'package:ChatUI/admin/bloc/admin_state_bloc.dart';
+import 'package:ChatUI/admin/bloc/admin_users_.dart';
 import 'package:ChatUI/libs.dart';
 
 List<Alie> alies = [];
@@ -16,6 +18,8 @@ class StaticDataStore {
   static List<Alie> searchResultUsers = [];
   static InteractiveUser interactingUser;
   static AdminState adminState;
+  static AdminUsersState adminUsersState;
+  static AdminIdeaState adminIdeaState;
 }
 
 enum WS_CONNECTION_STATUS {

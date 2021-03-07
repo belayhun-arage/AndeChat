@@ -15,13 +15,13 @@ class CategorySelector extends StatelessWidget {
     "Home": Icons.home,
     "Messages": Icons.message,
     "Online ": Icons.online_prediction,
-    "Groups": Icons.group,
+    // "Groups": Icons.group,
   };
   final List<String> categoryNames = [
     "Home",
     "Messages",
     "Online ",
-    "Groups",
+    // "Groups",
   ];
   @override
   Widget build(BuildContext totalContext) {
@@ -33,6 +33,7 @@ class CategorySelector extends StatelessWidget {
           // Setting the Selected  index so that i can set the selected index to white ( Bold White  )
           this.selectedIndex = val;
           return ListView.builder(
+            
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
             itemBuilder: (context, index) {

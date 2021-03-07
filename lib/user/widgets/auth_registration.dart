@@ -1,7 +1,17 @@
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+class EmailFieldValidator {
+  static String validate(String value) {
+    return value.isEmpty ? 'Email Can Not Be Empty' : null;
+  }
+}
 
+class PasswordFieldValidator {
+  static String validate(String value) {
+    return value.isEmpty ? 'Password Can Not Be Empty' : null;
+  }
+}
 class AuthRegistration extends StatefulWidget {
   final Function(int val) function;
 
@@ -226,9 +236,9 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                                           "Registration Was Not Succesful Try again";
                                       warningMessage = true;
                                     });
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                            HomeScreen.Route, (route) => false);
+                                    // Navigator.of(context)
+                                    //     .pushNamedAndRemoveUntil(
+                                    //         HomeScreen.Route, (route) => false);
                                   } else if (!value.success) {
                                     setState(() {
                                       this.loading = false;
@@ -244,6 +254,8 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                                       this.message = value.message;
                                       this.warningMessage = false;
                                     });
+                                     Navigator.of(context).pushNamedAndRemoveUntil(
+                                      HomeScreen.Route, (route) => false);
                                   }
                                 });
                               },

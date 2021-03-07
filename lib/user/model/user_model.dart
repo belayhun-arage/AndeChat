@@ -7,12 +7,12 @@ import 'package:ChatUI/user/user.dart';
 
 class Alie {
   final String id;
-  final String imageUrl;
+  String imageUrl;
   final String email;
-  final String bio;
-  final String lastUpdatedTime;
-  final String lastSeen;
-  final String username;
+  String bio;
+  String lastUpdatedTime;
+  String lastSeen;
+  String username;
   int idesCount;
   bool online = false;
   bool typing = false;
@@ -31,6 +31,7 @@ class Alie {
     this.username,
     this.myalies,
     this.mygroups,
+    // this.status
   });
 
   factory Alie.fromJson(Map<String, dynamic> theJson) {
@@ -77,7 +78,16 @@ class Alie {
       this.messages = [];
       return false;
     }
+  
     this.messages = ourMessages;
+    List<Alie> friends = [];
+    this.unreadMessages = 0;
+    for (int m = 0; m < this.messages.length; m++) {
+      final mes = this.messages[m];
+      if (mes.receiverID == StaticDataStore.ID && mes.seen == false) {
+        this.unreadMessages++;
+      }
+    }
     return true;
   }
 

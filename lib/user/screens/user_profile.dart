@@ -16,7 +16,7 @@ class ChangeProfile extends StatelessWidget {
       appBar: AppBar(
         title: Text(" Change Your Profile "),
       ),
-      drawer: MyNavigation(),
+      // drawer: MyNavigation(),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -63,23 +63,35 @@ class ChangeProfile extends StatelessWidget {
                       children: [
                         Stack(
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: 70,
-                              child: ClipOval(
-                                child: Image.asset(
-                                  'images/img.jpg',
-                                  height: 150,
-                                  width: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                            BlocBuilder<UserState, Alie>(
+                              builder: (context, alie) {
+                                return CircleAvatar(
+                                  radius: 70,
+                                  child: ClipOval(
+                                    child: (alie.imageUrl == "" ||
+                                            alie.imageUrl == null)
+                                        ? Image.asset(
+                                            "assets/images/greg.jpg",
+                                          )
+                                        : ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            child: Image.network(
+                                                StaticDataStore.HOST +
+                                                    alie.imageUrl)),
+                                  ),
+                                );
+                              },
                             ),
                             IconButton(
                               icon: Icon(Icons.add_a_photo),
                               onPressed: () async {
                                 final image = await pickImage(context);
+                                if (image != null) {
+                                  userState.UploadImage(image);
+                                }
                               },
-                            ),
+                            )
                           ],
                         ),
                       ],
@@ -91,34 +103,13 @@ class ChangeProfile extends StatelessWidget {
             Flexible(
               child: Expanded(
                 child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 25, 20, 4),
-                        child: Container(
-                          height: 80,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                decoration:
-                                    InputDecoration(labelText: 'Username'),
-                                controller: usernameController,
-                                // onChanged: (value) => title = value,
-                              ),
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              border: Border.all(
-                                  width: 1.0, color: Colors.white70)),
-                        ),
-                      ),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 4),
+                  child: BlocBuilder<UserState, Alie>(builder: (_, alie) {
+                    usernameController.text = alie.username;
+                    bioController.text = alie.bio;
+                    return Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 25, 20, 4),
                           child: Container(
                             height: 80,
                             child: Align(
@@ -126,9 +117,11 @@ class ChangeProfile extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextField(
-                                  decoration: InputDecoration(labelText: 'Bio'),
+                                  decoration:
+                                      InputDecoration(labelText: 'Username'),
+                                  controller: usernameController,
+
                                   // onChanged: (value) => title = value,
-                                  controller: bioController,
                                 ),
                               ),
                             ),
@@ -139,37 +132,62 @@ class ChangeProfile extends StatelessWidget {
                                     width: 1.0, color: Colors.white70)),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          child: Align(
-                            alignment: Alignment.bottomRight,
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 5, 20, 4),
                             child: Container(
-                              height: 70,
-                              width: 200,
+                              height: 80,
                               child: Align(
-                                child: Text(
-                                  'Save',
-                                  style: TextStyle(
-                                      color: Colors.white70, fontSize: 20),
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    decoration:
+                                        InputDecoration(labelText: 'Bio'),
+                                    controller: bioController,
+                                  ),
                                 ),
                               ),
                               decoration: BoxDecoration(
-                                  color: Colors.deepOrange,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                  )),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  border: Border.all(
+                                      width: 1.0, color: Colors.white70)),
                             ),
                           ),
-                          onTap: () async {
-                            final alie = await userState.updateMyProfile(
-                                usernameController.text, bioController.text);
-                            userState.updateUser(alie);
-                          },
                         ),
-                      )
-                    ],
-                  ),
+                        Expanded(
+                          child: GestureDetector(
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                height: 70,
+                                width: 200,
+                                child: Align(
+                                  child: Text(
+                                    'Save',
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 20),
+                                  ),
+                                ),
+                                decoration: BoxDecoration(
+                                    color: Colors.deepOrange,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                    )),
+                              ),
+                            ),
+                            onTap: () async {
+                              final alie = await userState.updateMyProfile(
+                                  usernameController.text, bioController.text);
+                              print("The Alie is ${alie.toString()}");
+                              userState.updateUser(alie);
+                            },
+                          ),
+                        )
+                      ],
+                    );
+                  }),
                 ),
               ),
             )

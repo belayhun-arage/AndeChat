@@ -4,21 +4,21 @@
 import 'package:ChatUI/libs.dart';
 
 class WS_STATUS_CODE {
-  static const int UNKNOWN=0,
-      SEEN=1,
-      TYPING=2,
-      STOP_TYPING=3,
-      EEMESSAGE=4,
-      GMESSAGE=5,
-      ALIE_PROFILE_CHANGE=6,
-      NEW_ALIE=7,
-      GROUP_PROFILE_CHANGE=8,
-      GROUP_JOIN=9,
-      GROUP_LEAVE=10,
+  static const int UNKNOWN = 0,
+      SEEN = 1,
+      TYPING = 2,
+      STOP_TYPING = 3,
+      EEMESSAGE = 4,
+      GMESSAGE = 5,
+      ALIE_PROFILE_CHANGE = 6,
+      NEW_ALIE = 7,
+      GROUP_PROFILE_CHANGE = 8,
+      GROUP_JOIN = 9,
+      GROUP_LEAVE = 10,
       //this is to be implemented later
       // we did not include this functionality in
       //this project round .
-      DELETE_USER=11,
+      DELETE_USER = 11,
       ACTIVE_FRIENDS = 12;
 }
 
@@ -32,8 +32,21 @@ class SeenBody {
 
   SeenBody({this.messageNumber, this.senderID, this.observerID});
 
+  factory SeenBody.fromJson(Map<String , dynamic > theJson ) {
+    try{
+      return SeenBody(
+        messageNumber: theJson['message_number'] as int  , 
+        observerID: theJson["sender_id"] as String  ,
+        senderID: theJson['observer_id'] as String  , 
+      );
+    }catch(e , a){
+      return null ;
+    }
+  }
+
   Map<String, dynamic> toJson() {
     return {
+      "message_number" : this.messageNumber , 
       "sender_id": this.senderID,
       "body": this.observerID,
     };
@@ -48,20 +61,58 @@ class SeenMessage {
   SeenMessage({this.status, this.body});
   Map<String, dynamic> toJson() {
     return {
-      "status": this.status,
+      "status": 1,
       "body": this.body.toJson(),
     };
+  }
+
+  /// fromJson frm json method
+  factory SeenMessage.fromJson(Map<String, dynamic> theJson) {
+    try{
+    return SeenMessage(
+      status: theJson["status"] as int,
+      body: SeenBody.fromJson( theJson['body'] ),
+    );
+    }catch(e ,a ){
+      return null;
+    }
   }
 }
 
 class TypingBody {
   String typerID;
   String receiverID;
+
+  // TypingBody message
+  TypingBody({this.typerID, this.receiverID});
+
+  factory TypingBody.fromJson(Map<String, dynamic> json) {
+    try {
+      return TypingBody(
+        receiverID: json["receiver_id"] as String,
+        typerID: json["sender_id"] as String,
+      );
+    } catch (e, a) {
+      return null;
+    }
+  }
 }
 
 class TypingMessage {
   int status;
   TypingBody body;
+  TypingMessage({this.status, this.body});
+
+  factory TypingMessage.fromJson(Map<String, dynamic> json) {
+    try {
+      return TypingMessage(
+        status: json["status"] as int,
+        body: TypingBody.fromJson(json["body"] as Map<String, dynamic>),
+      );
+    } catch (e, a) {
+      return null;
+    }
+  }
 }
 
 class XEEMessage {

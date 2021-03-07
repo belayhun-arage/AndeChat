@@ -1,18 +1,22 @@
+import 'dart:convert';
+
 import 'package:ChatUI/libs.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
-//entity idea 
+//entity idea
 class Idea extends Equatable {
-  final String id, title, description, image;
+  final String id, title, description, image, ownerid;
   //final FileImage image;
   Alie owner;
 
-  // void getOwner(IdeaDataProvider repo) async {
-  //   this.owner = await repo.getOwner(this.id);
-  // }
+  void getOwner(dynamic repo) async {
+    if( repo is IdeaDataProvider || repo is AdminIdeaProvider ){
+      this.owner = await repo.getOwner(this.ownerid);
+    }
+  }
 
-  Idea({this.id, this.title, this.description, this.image});
+  Idea({this.id, this.title, this.description, this.image, this.ownerid});
   @override
   List<Object> get props => [id, title, description];
 
@@ -25,12 +29,34 @@ class Idea extends Equatable {
       return null;
     }
     return Idea(
-        id: json['id'],
-        title: json["title"],
-        description: json['description'],
-        image: json['image']);
+      id: json['id'],
+      title: json["title"],
+      description: json['description'],
+      image: json['image'],
+      ownerid: json["owner_id"] as String,
+    );
   }
-  @override
-  String toString() =>
-      'idea {id:$id, title: $title , description: $description}';
+
+  static List<Idea> AllIdeas(List<Map<String, dynamic>> allUsersJson) {
+    List<Idea> ideas = [];
+    for (var usr in allUsersJson) {
+      print(usr);
+      Idea idea = Idea.fromJson(usr  as Map<String  , dynamic > );
+      if (idea == null) {
+        print("New User Is Null ");
+      }else {
+        ideas.add(idea);
+      }
+    }
+    return ideas;
+  }
+
+  String toJson() {
+    return jsonEncode({
+      "id": this.id,
+      "title": this.title,
+      "description": this.description,
+    });
+  }
+  
 }

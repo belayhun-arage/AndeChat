@@ -17,3 +17,7 @@ WebSocket  , HTTP , and Flutter are technologies we used for Development.
 - Belayhun Arage
 - Nathnael Bahiru (Naty alem)
 - Fantahun Fekadu 
+
+## Backend Server Code 
+The Backend server code is available in the server 'Weg' and it will be using
+Golang and mongodb as a Databse .

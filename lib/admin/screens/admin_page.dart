@@ -31,11 +31,22 @@ class _AdminPageState extends State<AdminPage> {
       case 2:
         return new AddAdminFragment();
       case 3:
-        return new LogoutFragment();
+        {
+          Navigator.of(context).pushNamedAndRemoveUntil(AuthScreen.Route, (_) {
+            return false;
+          });
+          break;
+        }
 
       default:
         return new Text("Error");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    StaticDataStore.adminIdeaState.loadSampleIdeas();
   }
 
   _onSelectItem(int index) {
@@ -75,6 +86,7 @@ class _AdminPageState extends State<AdminPage> {
       child: Scaffold(
         appBar: new AppBar(
           title: new Text(widget.drawerItems[_selectedDrawerIndex].title),
+          elevation: 0,
         ),
         drawer: new Drawer(
           child: new Column(

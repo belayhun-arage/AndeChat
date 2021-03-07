@@ -21,3 +21,9 @@ class IdeaLoadSuccess extends IdeaState {
 }
 
 class IdeaOperationFailure extends IdeaState {}
+
+// class IdeaData lists the idea class datas with out the need to load the Ideas
+class IdeaData extends IdeaState {
+  List<Idea> ideas;
+  IdeaData({this.ideas});
+}

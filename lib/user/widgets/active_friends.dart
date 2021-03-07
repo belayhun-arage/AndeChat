@@ -27,9 +27,11 @@ class ActiveChat extends StatelessWidget {
           ),
           child: BlocBuilder<OnlineFriends, List<String>>(
             builder: (context, alies) {
+              print("\n\n\n\n\n\n\n\n$alies\n\n\n\n\n\n\n\n\n\n");
               return ListView.builder(
                 itemCount: alies != null ? alies.length : 0,
                 itemBuilder: (context, index) {
+                  
                   Alie alie;
                   final aliess = StaticDataStore.friendsState.state;
                   for (Alie al in aliess) {
@@ -38,7 +40,12 @@ class ActiveChat extends StatelessWidget {
                     }
                   }
                   if (alie == null) {
-                    return SizedBox();
+                    if (alies[index] == StaticDataStore.ID) {
+                      alie = StaticDataStore.userState.state;
+                    }
+                    if (alie == null) {
+                      return SizedBox();
+                    }
                   }
 
                   return GestureDetector(

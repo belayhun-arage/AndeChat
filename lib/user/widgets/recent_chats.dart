@@ -26,11 +26,10 @@ class RecentChats extends StatelessWidget {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          child: BlocBuilder<FriendsState, List<Alie> >(
+          child: BlocBuilder<FriendsState, List<Alie>>(
             builder: (context, alies) {
-
               return ListView.builder(
-                itemCount: alies!=null ? alies.length : 0 ,
+                itemCount: alies != null ? alies.length : 0,
                 itemBuilder: (context, index) {
                   final alie = alies[index];
                   return GestureDetector(
@@ -67,15 +66,12 @@ class RecentChats extends StatelessWidget {
                                       ? Image.asset(alie.imageUrl == ""
                                           ? "assets/images/greg.jpg"
                                           : alie.imageUrl)
-                                      : Image.file(
-                                          File(
-                                              '$filesPath${(alie.imageUrl.split('/')[(alie.imageUrl.split('/').length - 1)])}'),
-                                          height: 150,
-                                          width: 180,
-                                        ),
-                                  // AssetImage(
-                                  //   chat.sender.imageUrl,
-                                  // ),
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          child: Image.network(
+                                              StaticDataStore.HOST +
+                                                  alie.imageUrl)),
                                 ),
                               ),
                               SizedBox(
@@ -101,7 +97,9 @@ class RecentChats extends StatelessWidget {
                                     child: Text(
                                       alie.messages != null &&
                                               alie.messages.length > 0
-                                          ? (alie.messages[0]).text
+                                          ? (alie.messages[
+                                                  alie.messages.length - 1])
+                                              .text
                                           : "Say Hi! to ${alie.username} ",
                                       style: TextStyle(
                                         color: Colors.blueGrey,

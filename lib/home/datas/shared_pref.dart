@@ -3,6 +3,12 @@ import 'dart:async';
 import 'package:ChatUI/libs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// SharedPrefHandler class for handling persistent datas
+/// the User data
+/// session headers
+/// and some iniformation of the user wil be saved here
+///
+/// Based On SIngleton Pattern
 class SharedPrefHandler {
   static const ID = 'id';
   static const SET_COOKIE = 'set-cookie';
@@ -14,15 +20,10 @@ class SharedPrefHandler {
   static const COOKIE = "Cookie";
   static const FILE_PATH = 'file_path';
 
-
-
   static StreamController<bool> onSyncController = StreamController();
   static StreamController<bool> onSyncSearchController = StreamController();
   Stream<bool> get onSync => onSyncController.stream;
   Stream<bool> get onSyncSearch => onSyncSearchController.stream;
-
-
-
 
   final SharedPreferences _preferences;
 
@@ -30,25 +31,22 @@ class SharedPrefHandler {
 
   SharedPrefHandler(this._preferences);
 
-  Future<String >  getFilePath( ) async {
-     if (_handler == null) {
+  Future<String> getFilePath() async {
+    if (_handler == null) {
       await SharedPrefHandler.getInstance();
     }
-     String filePath =
+    String filePath =
         _handler._preferences.getString(SharedPrefHandler.FILE_PATH);
     return filePath;
   }
 
-
-  Future<void> setFilePath(String filePath ) async {
+  Future<void> setFilePath(String filePath) async {
     if (_handler == null) {
       await SharedPrefHandler.getInstance();
     }
-    _handler._preferences.setString(SharedPrefHandler.FILE_PATH, filePath );
+    _handler._preferences.setString(SharedPrefHandler.FILE_PATH, filePath);
     return;
   }
-
-
 
   static Future<SharedPrefHandler> getInstance() async {
     if (_handler == null) {
@@ -82,8 +80,7 @@ class SharedPrefHandler {
     String email = _handler._preferences.getString(EMAIL);
     String imageurl = _handler._preferences.getString(PROFILE_IMAGE);
     String bio = _handler._preferences.getString(BIO);
-    // String
-
+    
     Alie user = Alie(
       id: id,
       bio: bio,
@@ -91,9 +88,13 @@ class SharedPrefHandler {
       imageUrl: imageurl,
       username: username,
     );
+    if (user.id == "" || user.username == "" || user.email == "") {
+      return null;
+    }
+    return user;
   }
 
-  Future<void> setUser(Alie user) async {
+  Future<bool> setUser(Alie user) async {
     if (_handler == null) {
       await SharedPrefHandler.getInstance();
     }
@@ -101,19 +102,20 @@ class SharedPrefHandler {
     if (!res) {
       return res;
     }
-    res = await _handler._preferences.setString(USER_NAME, user.id);
+    res = await _handler._preferences.setString(USER_NAME, user.username);
     if (!res) {
       return res;
     }
-    res = await _handler._preferences.setString(EMAIL, user.id);
+    res = await _handler._preferences.setString(EMAIL, user.email);
     if (!res) {
       return res;
     }
-    res = await _handler._preferences.setString(PROFILE_IMAGE, user.id);
+    res = await _handler._preferences.setString(PROFILE_IMAGE, user.imageUrl);
     if (!res) {
       return res;
     }
-    res = await _handler._preferences.setString(BIO, user.id);
+    res = await _handler._preferences.setString(BIO, user.bio);
+    print("\n\n\n\nUser Saved Succesfuly \n\n\n\n");
     return res;
   }
 }

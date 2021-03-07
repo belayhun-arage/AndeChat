@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ChatUI/home/datas/datas.dart';
 import 'package:ChatUI/home/handlers/handler.dart';
 import 'package:ChatUI/ideas/models/models.dart';
+import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/messaging/data_provider/data_provider.dart';
 import 'package:ChatUI/service/service.dart';
 import 'package:http/http.dart' as http;
@@ -45,13 +46,12 @@ class IdeaDataProvider {
     map['description'] = idea.description;
     map['image'] = idea.image;
 
-    http.Response response = await http.post(
+    http.Response response = await http.put(
       "${HOST}api/idea/new/",
-      body: map,
+      body: jsonEncode(map),
       headers: headers,
     );
 
-    print("this is response body" + response.body);
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body) as Map<String, dynamic>;
       if (body["success"] as bool) {
@@ -60,6 +60,29 @@ class IdeaDataProvider {
       return null;
     } else {
       throw Exception('Failed to create idea.');
+    }
+  }
+
+  // getOwner
+  Future<Alie> getOwner(String id) async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
+    var response = await http.get(
+      "$HOST/api/user/?userid=$id",
+      headers: headers,
+    );
+    print(" Response : ${response.body}");
+    if (response.statusCode == 200) {
+      final zjson = jsonDecode(response.body) as Map<String, dynamic>;
+      if (zjson["success"] as bool) {
+        return Alie.fromJson(zjson["user"] as Map<String, dynamic>);
+      } else {
+        return Alie(username: "UNKNOWN", email: "UNKNOWN", id: "");
+      }
+    } else {
+      return null;
     }
   }
 
@@ -82,6 +105,7 @@ class IdeaDataProvider {
         final ide = ideas['ideas'][a];
         final idea = Idea.fromJson(ide);
         if (idea != null) {
+          //idea.getOwner(this);
           ideass.add(idea);
         }
         a++;
@@ -112,6 +136,7 @@ class IdeaDataProvider {
         final ide = ideas['ideas'][a];
         final idea = Idea.fromJson(ide);
         if (idea != null) {
+          idea.getOwner(this);
           ideass.add(idea);
         }
         a++;
@@ -124,39 +149,54 @@ class IdeaDataProvider {
   }
 
   //Crude deleteIdea delete a particular idea in the database
-  Future<void> deleteIdea(String idea_id) async {
+  Future<bool> deleteIdea(String ideaid) async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {
       headers = {};
     }
 
     final http.Response response = await http.delete(
-      '$HOST/idea/$idea_id',
+      '${HOST}api/idea/?idea_id=$ideaid',
       headers: headers,
     );
+    if (response.statusCode == 200) {
+      final jdon = jsonDecode(response.body);
+      print(jdon);
 
-    if (response.statusCode != 301) {
-      throw Exception('Failed to delete course.');
+      if (jdon["success"] as bool) {
+        return true;
+      }
+      return false;
+    } else {
+      return false;
     }
   }
 
   //Crude updateIdea update the content of a particular idea in the database
-  Future<void> updateIdea(Idea idea) async {
+  Future<bool> updateIdea(Idea idea) async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
+    headers['Content-Type'] = 'application/json';
     final http.Response response = await http.put(
-      '$HOST/idea/ideas/${idea.id}',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'id': idea.id,
-        'title': idea.title,
-        'description': idea.description,
-      }),
+      
+      '${HOST}api/idea/',
+      headers: headers , 
+      body: idea.toJson(),
     );
     print("${response.body} ${response.statusCode}");
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update idea.');
+    if (response.statusCode == 200) {
+      final jsonval = jsonDecode(response.body);
+      print(jsonval);
+      if (jsonval["success"] as bool) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
     }
   }
 }

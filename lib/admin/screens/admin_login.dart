@@ -1,3 +1,4 @@
+import 'package:ChatUI/admin/bloc/admin_idea_state.dart';
 import 'package:ChatUI/admin/bloc/admin_state_bloc.dart';
 import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +37,6 @@ class _AdminLoginState extends State<AdminLogin> {
     super.initState();
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     // Instantiating the emailController and the password Controller
@@ -49,6 +47,9 @@ class _AdminLoginState extends State<AdminLogin> {
       this.passwordController = new TextEditingController();
     }
     StaticDataStore.adminState = BlocProvider.of<AdminState>(context);
+    StaticDataStore.adminUsersState = BlocProvider.of<AdminUsersState>(context);
+
+    StaticDataStore.adminIdeaState = BlocProvider.of<AdminIdeaState>(context);
 
     return MaterialApp(
       home: Scaffold(

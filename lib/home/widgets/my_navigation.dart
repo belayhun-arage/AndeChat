@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'package:ChatUI/ideas/bloc/my_ideas_bloc.dart';
 import 'package:ChatUI/libs.dart';
+import 'package:ChatUI/user/widgets/delete_your_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MyNavigation extends StatefulWidget {
   final Alie user;
@@ -18,36 +21,33 @@ class MyNavigation extends StatefulWidget {
 class _MyNavigationState extends State<MyNavigation> {
   String profileDir = '';
   // final Alie user;
-  final String filesPath;
+  String filesPath;
   bool loading = false;
-  _MyNavigationState({Key key, this.filesPath}) {
-    // this.profileDir =
-    //     "${this.filesPath}${user.imageUrl.split('/')[user.imageUrl.split('/').length - 1]}";
+  _MyNavigationState({Key key, this.filesPath});
+
+  @override
+  void initState() {
+    super.initState();
+    getApplicationDocumentsDirectory().then((direct) {
+      filesPath = direct.path + "/images/";
+      // this.profileDir = filesPath
+    });
   }
 
   List<String> categories = [
-    "Home",
-    "Profile",
-    "New Group",
-    "Setting",
-    "Theme",
-    "About Us",
-    "Logout"
+    "My Ideas",
+    // "Deactivate Account",
   ];
   Map<String, List<Object>> categoryList = {
-    "Home": [Icons.home, HomeScreen.Route],
-    "Profile": [Icons.person, ChangeProfile.RouteName],
-    "New Group": [Icons.new_releases_rounded, "/"],
-    "Setting": [Icons.settings, "/"],
-    "Theme": [Icons.theater_comedy, "/"],
-    "About Us": [Icons.group_work_sharp, "/"],
-    "Logout": [Icons.logout, "/"],
+    // "Home": [Icons.home, HomeScreen.Route],
+    // "Profile": [Icons.person, ChangeProfile.RouteName],
+    "My Ideas": [Icons.wb_incandescent_sharp, IdeaList.routeName],
   };
 
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
-    final ideaBloc = BlocProvider.of<IdeaBloc>(context);
+    final ideaBloc = BlocProvider.of<MyIdeaBloc>(context);
     ideaBloc.add(IdeaLoad());
     return Drawer(
       elevation: 1,
@@ -68,20 +68,32 @@ class _MyNavigationState extends State<MyNavigation> {
                 children: [
                   BlocBuilder<UserState, Alie>(
                     builder: (context, user) {
+                      print(StaticDataStore.HOST + user.imageUrl);
                       return InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, IdeaList.routeName);
+                          Navigator.pushNamed(context, ChangeProfile.RouteName);
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                           child: (user.imageUrl == "" || user.imageUrl == null)
-                              ? Image.asset(
-                                  "assets/images/greg.jpg",
+                              ? Container(
+                                  height: 100,
+                                  width: 100,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: Image.asset(
+                                      "assets/images/avatar.png",
+                                    ),
+                                  ),
                                 )
-                              : Image.file(
-                                  File('${this.profileDir}'),
-                                  height: 150,
-                                  width: 180,
+                              : Container(
+                                  height: 100,
+                                  width: 100,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: Image.network(
+                                          StaticDataStore.HOST +
+                                              user.imageUrl)),
                                 ),
                         ),
                       );
@@ -101,30 +113,74 @@ class _MyNavigationState extends State<MyNavigation> {
                 ],
               ),
             ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).primaryColorLight,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  key: UniqueKey(),
-                  itemCount: categories.length,
-                  padding: EdgeInsets.all(3),
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon((categoryList[categories[index]])[0]),
-                      title: Text(categories[index]),
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed((categoryList[categories[index]])[1]);
-                      },
-                    );
-                  },
-                ),
-              ),
+            ListTile(
+              tileColor: Theme.of(context).primaryColorLight,
+              leading: Icon(Icons.person),
+              title: Text("Profile"),
+              onTap: () {
+                // "Profile": [, ChangeProfile.RouteName],
+                Navigator.of(context).pushNamed(
+                  ChangeProfile.RouteName,
+                );
+              },
             ),
+            ListTile(
+              leading: Icon(Icons.wb_incandescent_sharp),
+              title: Text("My Ideas"),
+              onTap: () {
+                Navigator.of(context).pushNamed(IdeaList.routeName);
+              },
+            ),
+            // "Deactivate": [Icons.settings, "/"],
+            ListTile(
+              leading: Icon(Icons.delete_forever_rounded),
+              title: Text("Deactivate"),
+              onTap: () {
+                StaticDataStore.userState.logout();
+                // Stop Services
+                UpdateData.onSyncController.close();
+                UpdateData.onSyncSearchController.close();
+                //Stop Loops
+                MainService.stopLoop = true;
+
+                // Close streams
+                WebSocketService.channel.sink
+                    .close(WebSocketStatus.NORMAL_CLOSURE);
+
+                // Navigator.of(context).pushNamedAndRemoveUntil(AuthScreen.Route,
+                //     (_)
+                ConfirmAccountDeletion(context, StaticDataStore.ID);
+                return false;
+                // });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
+              onTap: () {
+                StaticDataStore.userState.logout();
+
+                // Stop Services
+                UpdateData.onSyncController.close();
+                UpdateData.onSyncSearchController.close();
+                //Stop Loops
+                MainService.stopLoop = true;
+
+                // Close streams
+                WebSocketService.channel.sink
+                    .close(WebSocketStatus.NORMAL_CLOSURE);
+
+                Navigator.of(context).pushNamedAndRemoveUntil(AuthScreen.Route,
+                    (_) {
+                  return false;
+                });
+              },
+            )
           ],
         ),
       ),
     );
   }
 }
+
+// "": [,],

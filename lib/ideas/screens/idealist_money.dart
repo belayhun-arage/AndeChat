@@ -42,36 +42,25 @@ class IdeaListMoney extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      // Container(
-                      //   child: IconButton(
-                      //     icon: Icon(Icons.more_horiz),
-                      //     onPressed: () {
-                      //       showDialog(
-                      //         context: context,
-                      //         builder: (BuildContext context) =>
-                      //             _buildPopupDialog(context),
-                      //       );
-                      //     },
-                      //   ),
-                      //   margin: const EdgeInsets.symmetric(horizontal: 300.0),
-                      // ),
                       Container(
                         child: Row(
                           children: [
                             CircleAvatar(
                               radius: 24,
-                              backgroundImage:
-                                  AssetImage("assets/images/john.jpg"),
+                              child : courses[idx].owner != null
+                                  ? Image.network(StaticDataStore.HOST +
+                                      (courses[idx].owner.imageUrl ?? ""))
+                                  : Image.asset("assets/images/avatar.png"),
                             ),
                             SizedBox(
                               width: 20,
                             ),
-                            BlocBuilder<UserState, Alie>(builder: (_, me) {
-                              return Text(
-                                me.username,
-                                style: TextStyle(fontSize: 16.0),
-                              );
-                            }),
+                            Text(
+                              courses[idx].owner != null
+                                  ? courses[idx].owner.username
+                                  : "UNKNOWN",
+                              style: TextStyle(fontSize: 16.0),
+                            ),
                           ],
                         ),
                       ),
@@ -82,11 +71,10 @@ class IdeaListMoney extends StatelessWidget {
                         borderRadius: BorderRadius.all(
                           Radius.circular(30),
                         ),
-                        child: Image.asset(
-                          "assets/images/greg.jpg",
-                          height: 150,
-                          fit: BoxFit.fitWidth,
-                        ),
+                        child: courses[idx].image != null
+                            ? Image.network(
+                                StaticDataStore.HOST + courses[idx].image)
+                            : SizedBox(),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0, left: 8.0),
@@ -174,7 +162,7 @@ class IdeaListMoney extends StatelessWidget {
             print("what the heack");
           }
 
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         },
       ),
       // floatingActionButton: FloatingActionButton(

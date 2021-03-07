@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ChatUI/libs.dart';
 import 'package:ChatUI/messaging/models/message_model.dart';
 import 'package:ChatUI/messaging/widgets/message_option_pop_up.dart';
@@ -13,7 +15,17 @@ class MessageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserState state = BlocProvider.of<UserState>(context);
-
+    if (!(this.isMe) && !(this.message.seen)) {
+      SeenMessage mess = SeenMessage(
+        status: 1,
+        body: SeenBody(
+          messageNumber: this.message.messageNumber,
+          observerID: this.message.receiverID,
+          senderID: this.message.senderID,
+        ),
+      );
+      ChatScreen.websocketService.sendSeenMessage(mess);
+    }
     final messageBody = Container(
       width: MediaQuery.of(context).size.width * 0.65,
       padding: EdgeInsets.symmetric(

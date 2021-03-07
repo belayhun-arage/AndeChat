@@ -6,6 +6,15 @@ import 'package:path_provider/path_provider.dart';
 class HomeScreen extends StatefulWidget {
   static const String Route = "/home";
 
+  static HomeScreen _instance;
+
+  static HomeScreen get instance {
+    if (_instance == null) {
+      _instance = HomeScreen();
+    }
+    return _instance;
+  }
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -33,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // Initializing the Loop to connect to  a websocket service .
+    
+    
     MainService.getInstance().then((mss) {
       mss.startService();
     });
@@ -118,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
               filesPath: this.filesPath,
             ),
       drawerEnableOpenDragGesture: true,
+      endDrawerEnableOpenDragGesture: true,
       appBar: AppBar(
         title: isLoading
             ? SizedBox()
@@ -210,12 +222,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       {
                         return ActiveChat();
                       }
-                    case 3:
-                      {
-                        return Expanded(
-                          child: Container(color: Colors.yellow),
-                        );
-                      }
+                    // case 3:
+                    //   {
+                    //     return Expanded(
+                    //       child: Container(color: Colors.yellow),
+                    //     );
+                    //   }
                     default:
                       {
                         return Chats(

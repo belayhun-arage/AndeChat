@@ -4,7 +4,10 @@
 // utility that Flutter provides. For example, you can send tap and scroll
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
+
+import 'package:ChatUI/admin/widgets/add_admin_fragment.dart';
 import 'package:ChatUI/user/widgets/auth_login.dart';
+import 'package:ChatUI/user/widgets/auth_registration.dart';
 //import 'package:ChatUI/admin/widgets/admin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -54,7 +57,28 @@ void main() {
     await tester.tap(addLogin);
     await tester.pump();
 
-    expect(find.text("Adding User Password"), findsNothing);
+    expect(
+        find.text("Adding User Password"), findsNothing); //Says Nothing Widget
+  });
+
+  testWidgets('testing User Registration Password',
+      (WidgetTester tester) async {
+    //find Widgets
+    // final addEmail = find.byKey(ValueKey("addEmail"));
+    final addUserRegName = find.byKey(ValueKey("addUserRegName"));
+//    final addUserRegEmail = find.byKey(ValueKey("addUserRegEmail"));
+    final addSignIn = find.byKey(ValueKey('eaddSignIn'));
+
+//    final addUserRegister = find.byKey(ValueKey('addUserRegister'));
+
+    //Execute Widgets
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(body: Container(child: AuthRegistration()))));
+    await tester.enterText(addUserRegName, "Adding User Username");
+    await tester.tap(addSignIn);
+    await tester.pump();
+
+    expect(find.text("Adding User Username"), findsOneWidget);
   });
 }
 

@@ -11,14 +11,30 @@ class IdeaList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('List of ideas')
-
-      // ),
-      body: BlocBuilder<IdeaBloc, IdeaState>(
+      appBar: AppBar(
+        title: Text("Your Ideas "),
+        centerTitle: true,
+      ),
+      body: BlocBuilder<MyIdeaBloc, IdeaState>(
         builder: (_, state) {
           if (state is IdeaOperationFailure) {
-            return Text('Could not do idea operation');
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_rounded,
+                  color: Theme.of(context).primaryColor,
+                ),
+                Text(
+                  "Could not Found Ideas",
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            );
           }
 
           if (state is IdeaLoadSuccess) {

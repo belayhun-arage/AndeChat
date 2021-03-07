@@ -49,107 +49,105 @@ class SearchResult extends StatelessWidget {
                       bottomRight: Radius.circular(20.0),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(80),
-                              child: alie.imageUrl == ""
-                                  ? Image.asset(alie.imageUrl == ""
-                                      ? "assets/images/greg.jpg"
-                                      : alie.imageUrl)
-                                  : Image.file(
-                                      File(
-                                          '$filesPath${(alie.imageUrl.split('/')[(alie.imageUrl.split('/').length - 1)])}'),
-                                      height: 150,
-                                      width: 180,
-                                    ),
-                              // AssetImage(
-                              //   chat.sender.imageUrl,
-                              // ),
+                  child: Container(
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              height: 80,
+                              width: 80,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(80),
+                                child: alie.imageUrl == ""
+                                    ? Image.asset(alie.imageUrl == ""
+                                        ? "assets/images/avatar.png"
+                                        : alie.imageUrl)
+                                    : Image.network(
+                                        StaticDataStore.HOST + alie.imageUrl ,
+                                        height: 150,
+                                        width: 180,
+                                      ),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                alie.username,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5.0,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.55,
-                                child: Text(
-                                  alie.messages != null &&
-                                          alie.messages.length > 0
-                                      ? (alie.messages[
-                                             0])
-                                          .text
-                                      : "Say Hi! to ${alie.username} ",
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  alie.username,
                                   style: TextStyle(
-                                    color: Colors.blueGrey,
+                                    color: Colors.grey,
                                     fontSize: 15.0,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            "${alie.lastSeen}",
-                            overflow: TextOverflow.clip,
-                            softWrap: false,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 5.0,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          alie.unreadMessages > 0
-                              ? Container(
-                                  width: 40,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(
-                                        30.0,
-                                      )),
-                                  alignment: Alignment.center,
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.55,
                                   child: Text(
-                                    "New",
+                                    alie.messages != null &&
+                                            alie.messages.length > 0
+                                        ? (alie.messages[0]).text
+                                        : "Say Hi! to ${alie.username} ",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12.0,
-                                      color: Colors.white,
+                                      color: Colors.blueGrey,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w600,
                                     ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                )
-                              : Text(""),
-                        ],
-                      )
-                    ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "${Time.fromString(alie.lastSeen).showFullTime()}",
+                              overflow: TextOverflow.clip,
+                              softWrap: false,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 5.0,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            alie.unreadMessages > 0
+                                ? Container(
+                                    width: 40,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context).primaryColor,
+                                        borderRadius: BorderRadius.circular(
+                                          30.0,
+                                        )),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "New",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Text(""),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );

@@ -75,7 +75,12 @@ class SessionHandler {
     return cookie;
   }
 
+  Future<bool> saveUser(Alie alie) async {
+    print(" \n\n\n\n\n I Am Saving My User \n\n\n\n\n\n\n ");
+    return await this._pref.setUser(alie);
+  }
+
   Future<Alie> getUser() async {
-    await this._pref.getUser();
+    return await this._pref.getUser();
   }
 }

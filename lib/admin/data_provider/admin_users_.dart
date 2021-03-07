@@ -9,16 +9,16 @@ import 'dart:async';
   Methods List 
 
 */
-class AdminDataProvider extends Service {
+class AdminUsersProvider extends Service {
   static Client client;
-  static AdminDataProvider _handler;
+  static AdminUsersProvider _handler;
   static SessionHandler _sessHandler;
   static HttpCallHandler httpCallHandler;
   static const String HOST = StaticDataStore.HOST;
 
-  static Future<AdminDataProvider> getInstance() async {
+  static Future<AdminUsersProvider> getInstance() async {
     if (_handler == null) {
-      _handler = new AdminDataProvider();
+      _handler = new AdminUsersProvider();
       if (httpCallHandler == null) {
         httpCallHandler = await HttpCallHandler.getInstance();
         _sessHandler = await HttpCallHandler.sessionHandler;
@@ -31,9 +31,33 @@ class AdminDataProvider extends Service {
     return _handler;
   }
 
-  // Future<Admin>  adminRegister(String username  ,String  email  ,String  password ,String confirmPassword) async {
-
-  // }
+  Future<bool> deleteUserByID(String userid) async {
+    Map<String, String> headers = await _sessHandler.getHeader();
+    if (headers == null) {
+      headers = {};
+    }
+    headers["Content-Type"] = "application/json";
+    final response = await client.delete(
+      "${HOST}api/user/?user_id=$userid",
+      headers: headers,
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body) as Map<String, dynamic>;
+      if (body == null) {
+        return false;
+      } else {
+        _sessHandler.updateCookie(response);
+        print(body);
+        if (body["success"] as bool) {
+          print(" Resulting Succesful Deletiong .... ");
+          return true;
+        }
+        return false;
+      }
+    }
+    return false;
+  }
 
   Future<Admin> adminRegister(String username, String email, String password,
       String confirmPassword) async {
