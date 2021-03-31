@@ -104,6 +104,7 @@ class _AuthLoginState extends State<AuthLogin> {
                               )),
                         ),
                         TextField(
+                          key: Key('addEmail'), //For Testing
                           autocorrect: true,
                           autofocus: true,
                           style: TextStyle(
@@ -121,6 +122,7 @@ class _AuthLoginState extends State<AuthLogin> {
                           controller: emailController,
                         ),
                         TextField(
+                          key: Key('addPassword'), //For Testing
                           autocorrect: true,
                           autofocus: true,
                           cursorColor: Theme.of(context).primaryColor,
@@ -137,6 +139,7 @@ class _AuthLoginState extends State<AuthLogin> {
                         Container(
                           margin: EdgeInsets.all(10),
                           child: FlatButton.icon(
+                            key: Key('addLogin'), //For Testing Widget
                             textColor: Colors.white,
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),

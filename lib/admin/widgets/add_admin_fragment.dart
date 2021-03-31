@@ -23,6 +23,7 @@ class AddAdminFragment extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          key: Key('addUsername'),
                           decoration: InputDecoration(
                               labelText: "UserName",
                               hintText: "Enter Admin Name"),
@@ -39,6 +40,7 @@ class AddAdminFragment extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          key: Key('addAdminEmail'),
                           decoration: InputDecoration(
                               labelText: "Email", hintText: "Enter the Email"),
                         ),
@@ -54,6 +56,7 @@ class AddAdminFragment extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          key: Key('addAdminPassword'),
                           decoration: InputDecoration(
                               labelText: "Password",
                               hintText: "Enter the password"),
@@ -70,6 +73,7 @@ class AddAdminFragment extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          key: Key('addAdminConfirmEmail'),
                           decoration: InputDecoration(
                               labelText: "Confirm Password",
                               hintText: "confirm the password"),
@@ -81,6 +85,7 @@ class AddAdminFragment extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.all(25),
                   child: FlatButton(
+                    key: Key('AddAdmin'),
                     child: Text(
                       'Add',
                       style: TextStyle(fontSize: 20.0),

@@ -7,6 +7,20 @@ import 'package:flutter/material.dart';
 // void main() {
 //   runApp(MyApp());
 // }
+class OnSelectedValidator {
+//  int _selectedDrawerIndex = 0;
+  static int validate(int index) {
+    int _selectedDrawerIndex = 0;
+    _selectedDrawerIndex = index;
+    return _selectedDrawerIndex;
+  }
+}
+
+// class PasswordFieldValidator {
+//   static String validate(String value) {
+//     return value.isEmpty ? 'Password Can Not Be Empty' : null;
+//   }
+// }
 
 class AdminPage extends StatelessWidget {
   // This widget is the root of your application.
@@ -68,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _onSelectItem(int index) {
     setState(() => _selectedDrawerIndex = index);
+    //  setState(() => OnSelectedValidator.validate(index));
     Navigator.of(context).pop(); // close the drawer
   }
 

@@ -2,6 +2,19 @@ import 'package:ChatUI/libs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+//For Tasting
+class EmailFieldValidator {
+  static String validate(String value) {
+    return value.isEmpty ? 'Email Can Not Be Empty' : null;
+  }
+}
+
+class PasswordFieldValidator {
+  static String validate(String value) {
+    return value.isEmpty ? 'Password Can Not Be Empty' : null;
+  }
+}
+
 class AuthRegistration extends StatefulWidget {
   final Function(int val) function;
 
@@ -96,6 +109,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                                   ),
                                 ),
                           TextField(
+                            key: Key('addUserRegName'), // for Testing
                             autocorrect: true,
                             autofocus: true,
                             cursorColor: Theme.of(context).primaryColor,
@@ -109,6 +123,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                             controller: usernameController,
                           ),
                           TextField(
+                            key: Key('addUserRegEmail'), // for Testing
                             autocorrect: true,
                             autofocus: true,
                             cursorColor: Theme.of(context).primaryColor,
@@ -122,6 +137,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                             controller: emailController,
                           ),
                           TextField(
+                            key: Key('addUserRegPass'), // for Testing
                             autocorrect: true,
                             autofocus: true,
                             cursorColor: Theme.of(context).primaryColor,
@@ -152,6 +168,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                           Container(
                             margin: EdgeInsets.all(10),
                             child: FlatButton.icon(
+                              key: Key("addUserRegister"),
                               textColor: Colors.white,
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
@@ -177,9 +194,11 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                                   });
                                   return;
                                 } else if (emailController.text == "") {
+                                  // String value = emailController.text;
                                   this.setState(() {
                                     this.message =
                                         "Please Fill the Email Entry";
+                                    // EmailFieldValidator.validate(value);
                                     warningMessage = true;
                                   });
                                   return;
@@ -252,6 +271,7 @@ class _AuthRegistrationState extends State<AuthRegistration> {
                             ),
                           ),
                           FlatButton(
+                            key: Key('addSignIn'),
                             onPressed: () {
                               widget.function(0);
                             },
