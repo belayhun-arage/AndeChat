@@ -5,12 +5,10 @@ import 'package:ChatUI/libs.dart';
 
 List<Alie> alies = [];
 
-// String myid = '';
-
 class StaticDataStore {
   // 10.9.216.182
-  // static const String HOST = "http://10.0.3.2:8080/";
-  static const String HOST = "http://10.0.3.2:8080/";
+  static const String HOST = "http://10.9.208.154:8080/";
+  // static const String HOST = "http://10.0.3.2:8081/";
   static String ID = "";
   static UserState userState;
   static FriendsState friendsState;

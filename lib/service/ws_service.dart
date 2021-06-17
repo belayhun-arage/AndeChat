@@ -6,19 +6,10 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
 class WebSocketService {
-// @Summary 登录
-// @Description 登录
-// @Produce json
-// @Param body body controllers.LoginParams true "body参数"
-// @Success 200 {string} string "ok" "返回用户信息"
-// @Failure 400 {string} string "err_code：10002 参数错误； err_code：10003 校验错误"
-// @Failure 401 {string} string "err_code：10001 登录失败"
-// @Failure 500 {string} string "err_code：20001 服务错误；err_code：20002 接口错误；err_code：20003 无数据错误；err_code：20004 数据库异常；err_code：20005 缓存异常"
-// @Router /user/person/login [post]
   static WebSocketChannel _channel;
   static WebSocketService _service; // 10.9.216.182
-  // static const String WSHOST = 'ws://10.0.3.2:8080/chat/';
-  static const String WSHOST = 'ws://10.0.3.2:8080/chat/';
+  // static const String WSHOST = 'ws://10.0.3.2:8081/chat/';
+  static const String WSHOST = 'ws://10.9.208.154:8080/chat/';
   //  List Of Blocs will be listed here .
   static UserState userState;
   static FriendsState firendsState;
@@ -65,14 +56,18 @@ class WebSocketService {
       _channel = new IOWebSocketChannel.connect(WSHOST, headers: headers);
       // print(headers);
       _channel.stream.listen((data) async {
-        print("$data  ${data.runtimeType}");
-        print(data.runtimeType);
-        final jsonMessage = jsonDecode(data.toString());
+        final jsonMessage = jsonDecode(data);
+
+        print(
+            " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : ${jsonMessage["status"]} , ${jsonMessage["status"].runtimeType} ");
+
         switch (jsonMessage['status']) {
 
           /// End to End Message
-          case WS_STATUS_CODE.EEMESSAGE:
+          case 4:
             {
+              print(
+                  "\n\n\n\n\n\n\n\n\n\n\n\n\n\nMessage Has Commed \n\n\n\n\n\n\n\n\n\n\n\n\n\n");
               /*
               FOrmat 
               {
@@ -105,28 +100,26 @@ class WebSocketService {
               int indctr = 0;
 
               Alie newAlie = StaticDataStore.interactingUser.state;
-              // List<Alie> updatedFriends =
-              //     StaticDataStore.friendsState.state.map<Alie>((alie) {
-              //   if (alie.id == alieID) {
-              //     alie.messages == null ? [] : alie.messages;
-              //     alie.messages.add(eemessage);
-              //     alieIndex = indctr;
-              //   }
-              //   indctr++;
-              //   return alie;
-              // }).toList(growable: true);
+              newAlie.messages.add(eemessage);
               List<Alie> myfriends = StaticDataStore.friendsState.state;
               if (myfriends == null || myfriends.length == 0) {
                 newAlie.messages =
                     newAlie.messages != null ? newAlie.messages : [];
                 newAlie.messages.add(eemessage);
                 myfriends = [newAlie];
+                StaticDataStore.interactingUser
+                    .updateActiveUserMessages(newAlie);
               } else {
                 for (int a = 0; a < myfriends.length; a++) {
                   final dalie = myfriends[a];
                   if (dalie.id == alieID) {
+                    print(
+                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n8888888888888888888888888888888888888888888888888\n\n\n\n\n\n\n\n\n\n\n");
                     dalie.messages.add(eemessage);
                     myfriends[a] = dalie;
+                    StaticDataStore.friendsState.updateFriendsState(myfriends);
+                    StaticDataStore.interactingUser
+                        .updateActiveUserMessages(dalie);
                     break;
                   }
                 }

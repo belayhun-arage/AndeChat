@@ -191,6 +191,8 @@ class UserDataProvider extends Service {
     return null;
   }
 
+  // db.user.createIndex( { username: "text",email: "text"})
+
   Future<List<Alie>> getMyFriends() async {
     Map<String, String> headers = await _sessHandler.getHeader();
     if (headers == null) {

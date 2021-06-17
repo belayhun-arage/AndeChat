@@ -49,7 +49,7 @@ class _CreateIdeaState extends State<CreateIdea> {
     // final CourseArgument args = ModalRoute.of(context).settings.arguments;
     MyIdeaBloc myideas = BlocProvider.of<MyIdeaBloc>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('${widget.args.edit ? "update idea" : "add new idea"}'),
         leading: IconButton(
@@ -165,8 +165,9 @@ class _CreateIdeaState extends State<CreateIdea> {
                     myideas.add(event);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
-                    Navigator.of(context)
-                        .pushNamed(IdeaList.routeName, );
+                    Navigator.of(context).pushNamed(
+                      IdeaList.routeName,
+                    );
                   }
                 },
               ),
